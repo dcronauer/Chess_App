@@ -132,6 +132,6 @@ def main():
     result = rook.get_piece()
     print(result)  
     #kill_piece(rook)
-    
-main()
+if __name__ == "__main__":    
+    main()
         
