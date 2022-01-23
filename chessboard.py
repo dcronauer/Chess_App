@@ -12,7 +12,7 @@ def main():
 
 
 class Chess_GUI:
-    
+    images = []
     array_rows = [1,2,3,4,5,6,7,8]
     
     def __init__(self):
@@ -21,33 +21,36 @@ class Chess_GUI:
         self.main_window.title('Chess App')
         self.main_window.minsize(800,800)
         self.create_canvas()
-        self.create_pieces()
+        
         
         
     def create_canvas(self):
+        
         x = 0
         y = 0
         width = 100
         height = 100
-        self.main_window.grid_columnconfigure(0,weight=1)
-        self.main_window.grid_rowconfigure(0,weight=1)
-        self.main_window.grid_rowconfigure(1,weight=1)
+        # self.main_window.grid_columnconfigure(0,weight=1)
+        # self.main_window.grid_rowconfigure(0,weight=1)
+        # self.main_window.grid_rowconfigure(1,weight=1)
 
         self.board_frame = ttk.Frame(self.main_window)
-        self.board_frame.grid(row=0,column=0,sticky="nsew")
+        self.board_frame.pack()
+        # self.board_frame.grid(row=0,column=0,sticky="nsew")
        
-        self.board_frame.grid_rowconfigure(0,weight=1)
-        self.board_frame.grid_columnconfigure(0,weight=1)
+        # self.board_frame.grid_rowconfigure(0,weight=1)
+        # self.board_frame.grid_columnconfigure(0,weight=1)
         
-        self.frame2 = ttk.Frame(self.main_window)
-        self.frame2.grid(row=1,column=0, sticky="nsew")
-        self.frame2.grid_rowconfigure(1,weight=1)
-        self.frame2.grid_columnconfigure(0,weight=1)
+        # self.frame2 = ttk.Frame(self.main_window)
+        # self.frame2.grid(row=1,column=0, sticky="nsew")
+        # self.frame2.grid_rowconfigure(1,weight=1)
+        # self.frame2.grid_columnconfigure(0,weight=1)
         
         
         #self.rect = self.board.Canvas.create_rectangle(0,0,100,100,fill="red")
         self.board = tkinter.Canvas(self.main_window, bg = "black",width=800,height=800)
-        self.board.grid(column=0,row=0, sticky="nsew")
+        #self.board.grid(column=0,row=0, sticky="nsew")
+        self.board.pack()
         
         
        
@@ -65,7 +68,8 @@ class Chess_GUI:
                 #print(i,x,y,height,width)
                 x,y, height,width = self.draw_squares(x,y,height,width)
                 #print(i,x,y,height,width)
-                
+        self.create_pieces()        
+    
     def draw_squares(self,x,y,height,width):
         
         for i in range(4):
@@ -80,45 +84,32 @@ class Chess_GUI:
         height += 100
         return x, y, height, width   
  
-    def create_pieces(self):
-        
-                
+    def create_pieces(self):  
         total = 0
         for item in PIECE_DICTIONARY:
             list = PIECE_DICTIONARY[item]
-            print(list)
+            
             for i in range(list[3]):
                 piece = Pieces(list[0],list[1],list[2])
-                
-                
-                
                 
                 DICT_PIECES[item+str(i+1)] = piece
                 DICT_PIECE_REVERSE[piece] = item + str(i+1)
                 piece.set_position()
-                self.image = Image.open(list[2])
-                self.piece_image = ImageTk.PhotoImage(self.image)
-                piece_identity = DICT_PIECE_REVERSE[piece]
-                square = POSITION_START[piece_identity]
-                list1 = POSITION_NW[square]
+                
+                #self.image = Image.open(piece.image)
+                self.piece_image = ImageTk.PhotoImage(file=piece.image)
+
+                list1 = POSITION_NW[piece.position]
                 x = list1[0]
                 y = list1[1]
-                print(x,y)
-
+                
                 # self.label = ttk.Label(self.frame2,image = self.piece_image)
                 # self.label.grid(row = total, column=0)
-                self.canvas_piece = self.board.create_image(x,y,anchor="nw",image=self.piece_image)
-                
+                id = self.board.create_image(x,y,anchor="center",image=self.piece_image)
+                self.images.append(self.piece_image)
                 
                 total += 1
-        print(total)
         print(BOARD_CORDINATES)
-
-
-        
-
-       
-             
-
+            
 if __name__ == '__main__':
     main()
