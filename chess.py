@@ -9,7 +9,7 @@ DICT_COLUMNS_REVERSED = {1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F', 7: 'G',
 DICT_POSSIBLE_MOVES = {}
 DICT_PIECES = {}
 DICT_PIECE_REVERSE = {}
-PIECE_DICTIONARY = {'wp': ['white', 'pawn', 'C://Users/Locke/projects/Chess_App/images/white_p.png',8],  'wn': ['white', 'knight','images/white_n.png',2], 'wb': ['white', 'bishop','images/white_b.png',2], 'wr': ['white', 'rook','images/white_r.png',2], 'wq': ['white', 'queen','images/white_q.png',1], 'wk': ['white', 'king','images/white_k.png',1], \
+PIECE_DICTIONARY = {'wp': ['white', 'pawn', 'images/white_p.png',8],  'wn': ['white', 'knight','images/white_n.png',2], 'wb': ['white', 'bishop','images/white_b.png',2], 'wr': ['white', 'rook','images/white_r.png',2], 'wq': ['white', 'queen','images/white_q.png',1], 'wk': ['white', 'king','images/white_k.png',1], \
     'bp': ['black','pawn','images/black_p.png',8], 'bn': ['black', 'knight','images/black_n.png',2], 'bb': ['black', 'bishop','images/black_b.png',2], 'br': ['black', 'rook','images/black_r.png',2], 'bq': ['black', 'queen','images/black_q.png',1], 'bk': ['black', 'king','images/black_k.png',1]}
 BOARD_CORDINATES = {'A1': None, 'A2': None, 'A3': None , 'A4': None, 'A5': None, 'A6': None, 'A7': None, 'A8': None, 'B1': None, 'B2': None , 'B3': None, 'B4': None, 'B5': None, 'B6': None, 'B7': None, 'B8': None, 'C1': None, 'C2': None, 
  'C3': None, 'C4': None, 'C5': None, 'C6': None, 'C7': None, 'C8': None, 'D1': None, 'D2': None, 'D3': None, 'D4': None, 'D5': None, 'D6': None, 'D7': None, 'D8': None, 'E1': None, 'E2': None, 'E3': None, 'E4': None, 'E5': None, 'E6': None, 
@@ -25,7 +25,7 @@ POSITION_CENTER = {'A1': [50, 750], 'A2': [50, 650], 'A3': [50, 550], 'A4': [50,
 
 class Pieces:
 
-    def __init__(self, color, type, image, position = None, destroyed = False, kill = False, moved = False,cordinates=None):
+    def __init__(self, color, type, image, position = None, destroyed = False, kill = False, moved = False,cordinates=None, id=None):
         self.color = color
         self.type = type
         self.image = image
@@ -34,9 +34,12 @@ class Pieces:
         self.kill = kill
         self.moved = moved
         self.cordinates = cordinates
+        self.id = id
     #accessor
     def get_piece(self):
         return (self.color,self.type,self.image, self.position)
+    def get_id(self):
+        return self.id, self
     def set_position(self):
         
         block = DICT_PIECE_REVERSE[self]
@@ -45,7 +48,10 @@ class Pieces:
        
 
         BOARD_CORDINATES[self.position] = self
-        
+    #mutator
+    def set_id(self,id):
+        self.id = id 
+
     def rook_moves(self,position):
         max_range = 8
         row = int(position[1])

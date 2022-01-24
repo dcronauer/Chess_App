@@ -14,7 +14,8 @@ def main():
 
 
 class Chess_GUI:
-    images = []
+    images = {}
+    ids = {}
     array_rows = [1,2,3,4,5,6,7,8]
     
     def __init__(self):
@@ -32,7 +33,8 @@ class Chess_GUI:
         self._drag_data["item"] = self.board.find_closest(event.x,event.y)[0]
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
-        print("grabbed",self._drag_data.get("item"))
+        self.piece = self.ids[self._drag_data.get("item")]
+        print("grabbed",self._drag_data.get("item"),self.piece)
     def drag_stop(self, event):
         """End drag of an object"""
         # reset the drag information
@@ -78,7 +80,7 @@ class Chess_GUI:
         
         
         #self.rect = self.board.Canvas.create_rectangle(0,0,100,100,fill="red")
-        self.board = tkinter.Canvas(self.main_window, bg = "black",width=800,height=800)
+        self.board = tkinter.Canvas(self.main_window, bg = "grey",width=800,height=800)
         #self.board.grid(column=0,row=0, sticky="nsew")
         self.board.pack()
         
@@ -88,7 +90,7 @@ class Chess_GUI:
             
             if i % 2 != 0:
                 #print(i,x,y,height,width)
-                x,y, height,width = self.draw_squares(x,y,height,width)
+                x,y, height,width = self.draw_squares(x,y,height,width,i)
                 
                 #print(i,x,y,height,width)
             elif i % 2 == 0:
@@ -96,11 +98,11 @@ class Chess_GUI:
                 x = 100
                 width = 200
                 #print(i,x,y,height,width)
-                x,y, height,width = self.draw_squares(x,y,height,width)
+                x,y, height,width = self.draw_squares(x,y,height,width,i)
                 #print(i,x,y,height,width)
         self.create_pieces()        
     
-    def draw_squares(self,x,y,height,width):
+    def draw_squares(self,x,y,height,width,l):
         
         for i in range(4):
             
@@ -108,10 +110,24 @@ class Chess_GUI:
             
             x += 200
             width +=200
+        if l % 2 != 0: 
+            x = 100
+            width = 200
+        elif l % 2 == 0:
+            x = 0
+            width = 100
+
+        for i in range(4):
+            self.board.create_rectangle(x,y,width,height,fill="black")
+            x += 200
+            width += 200
+        
+        
         x = 0
         width = 100
         y += 100
         height += 100
+
         return x, y, height, width   
  
     def create_pieces(self):  
@@ -135,8 +151,11 @@ class Chess_GUI:
                 
                 # self.label = ttk.Label(self.frame2,image = self.piece_image)
                 # self.label.grid(row = total, column=0)
-                id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=("piece",))
-                self.images.append(self.piece_image)
+                self.id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=("piece",))
+                piece.set_id(self.id)
+                self.ids[self.id] = piece
+
+                self.images[piece] = self.piece_image
                 
                 total += 1
         print(BOARD_CORDINATES)
