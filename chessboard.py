@@ -1,3 +1,4 @@
+import imghdr
 from chess import *
 from PIL import ImageTk, Image
 import tkinter
@@ -11,19 +12,44 @@ def main():
     tkinter.mainloop()
 
 
+
 class Chess_GUI:
     images = []
     array_rows = [1,2,3,4,5,6,7,8]
     
     def __init__(self):
         self.main_window = tkinter.Tk()          
-        self.main_window.geometry("800x800")
+        self.main_window.geometry("800x850")
         self.main_window.title('Chess App')
         self.main_window.minsize(800,800)
         self.create_canvas()
-        
-        
-        
+        self._drag_data = {"x": 0, "y": 0, "item": None}
+        self.board.tag_bind("piece","<ButtonPress-1>", self.select_piece)
+        self.board.tag_bind("piece", "<ButtonRelease-1>", self.drag_stop)
+        self.board.tag_bind("piece", "<B1-Motion>", self.drag)
+             
+    def select_piece(self,event):
+        self._drag_data["item"] = self.board.find_closest(event.x,event.y)[0]
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
+        print("grabbed",self._drag_data.get("item"))
+    def drag_stop(self, event):
+        """End drag of an object"""
+        # reset the drag information
+        self._drag_data["item"] = None
+        self._drag_data["x"] = 0
+        self._drag_data["y"] = 0
+    def drag(self, event):
+        """Handle dragging of an object"""
+        # compute how much the mouse has moved
+        delta_x = event.x - self._drag_data["x"]
+        delta_y = event.y - self._drag_data["y"]
+        # move the object the appropriate amount
+        self.board.move(self._drag_data["item"], delta_x, delta_y)
+        # record the new position
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
+
     def create_canvas(self):
         
         x = 0
@@ -35,7 +61,11 @@ class Chess_GUI:
         # self.main_window.grid_rowconfigure(1,weight=1)
 
         self.board_frame = ttk.Frame(self.main_window)
-        self.board_frame.pack()
+        self.board_frame.pack(side="top")
+        self.frame = ttk.Frame(self.main_window)
+        self.frame.pack(side="bottom")
+        self.my_label = ttk.Label(self.frame, text="")
+        self.my_label.pack()
         # self.board_frame.grid(row=0,column=0,sticky="nsew")
        
         # self.board_frame.grid_rowconfigure(0,weight=1)
@@ -99,17 +129,19 @@ class Chess_GUI:
                 #self.image = Image.open(piece.image)
                 self.piece_image = ImageTk.PhotoImage(file=piece.image)
 
-                list1 = POSITION_NW[piece.position]
+                list1 = POSITION_CENTER[piece.position]
                 x = list1[0]
                 y = list1[1]
                 
                 # self.label = ttk.Label(self.frame2,image = self.piece_image)
                 # self.label.grid(row = total, column=0)
-                id = self.board.create_image(x,y,anchor="center",image=self.piece_image)
+                id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=("piece",))
                 self.images.append(self.piece_image)
                 
                 total += 1
         print(BOARD_CORDINATES)
+    
+
             
 if __name__ == '__main__':
     main()
