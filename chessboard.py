@@ -17,6 +17,7 @@ class Chess_GUI:
     images = {}
     ids = {}
     array_rows = [1,2,3,4,5,6,7,8]
+    position_initial = []
     
     def __init__(self):
         self.main_window = tkinter.Tk()          
@@ -35,6 +36,9 @@ class Chess_GUI:
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
         self.piece = self.ids[self._drag_data.get("item")]
+        self.position_initial.append(self._drag_data["x"])
+        self.position_initial.append(self._drag_data["y"])
+        print(self.position_initial)
         
         color, type, image, position = Pieces.get_piece(self.piece)
         print("grabbed",self._drag_data.get("item"),type)
@@ -44,7 +48,7 @@ class Chess_GUI:
         """End drag of an object"""
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
         row_dict = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1}
-        
+        print(self.board.coords(69),'cord result')
         self.piece = self.ids[self._drag_data.get("item")]
         self.image = self._drag_data.get("item")
         print(self.image)
@@ -55,6 +59,7 @@ class Chess_GUI:
         print(moves)
         row = self._drag_data.get('y')
         column = self._drag_data.get('x')
+        print(self.board.coords(69),'cord result')
         print(row,column)
         row_int =int(row/100)
         column_int = int(column/100)
@@ -75,6 +80,7 @@ class Chess_GUI:
         print(BOARD_CORDINATES)
 
         DICT_POSSIBLE_MOVES.clear()
+        self.position_initial.clear()
         # reset the drag information
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
