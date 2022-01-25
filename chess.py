@@ -48,6 +48,15 @@ class Pieces:
        
 
         BOARD_CORDINATES[self.position] = self
+    def set_move_position(self,position_id):
+        print(self.position,"before change")
+        BOARD_CORDINATES[self.position] = None
+        self.position = position_id
+        print(self.position)
+
+        BOARD_CORDINATES[self.position] = [self]
+
+
     #mutator
     def set_id(self,id):
         self.id = id 
@@ -72,7 +81,20 @@ class Pieces:
         BOARD_CORDINATES[self.position]
         self.position = None
         self.destroyed = True
-    
+    def pawn_moves(self):
+        if self.moved == False:
+            max_range = 2
+        else:
+            max_range =1
+        position = self.position
+        row = int(position[1])
+        column = position[0]
+        for i in range(max_range):
+            row += 1
+            DICT_POSSIBLE_MOVES[column+str(row)] = column +str(row)
+        print(DICT_POSSIBLE_MOVES)
+            
+
 def above(starting_row, column, max_range,position):
     while max_range > starting_row:
         starting_row +=1
