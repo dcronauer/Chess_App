@@ -35,19 +35,20 @@ class Pieces:
         self.moved = moved
         self.cordinates = cordinates
         self.id = id
+    
     #accessor
     def get_piece(self):
         return (self.color,self.type,self.image, self.position)
+    
     def get_id(self):
         return self.id, self
+    
+    #mutator
     def set_position(self):
-        
         block = DICT_PIECE_REVERSE[self]
-         
         self.position = POSITION_START[block]
-       
-
         BOARD_CORDINATES[self.position] = self
+    
     def set_move_position(self,position_id):
         print(self.position,"before change")
         BOARD_CORDINATES[self.position] = None
@@ -55,9 +56,10 @@ class Pieces:
         print(self.position)
 
         BOARD_CORDINATES[self.position] = [self]
+    def set_move(self):
+        self.moved = True
+        print("moved is true")
 
-
-    #mutator
     def set_id(self,id):
         self.id = id 
 

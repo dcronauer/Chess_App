@@ -36,6 +36,7 @@ class Chess_GUI:
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
         self.piece = self.ids[self._drag_data.get("item")]
+        
         self.position_initial.append(self._drag_data["x"])
         self.position_initial.append(self._drag_data["y"])
         print(self.position_initial)
@@ -48,35 +49,42 @@ class Chess_GUI:
         """End drag of an object"""
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
         row_dict = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1}
-        print(self.board.coords(69),'cord result')
+        
         self.piece = self.ids[self._drag_data.get("item")]
-        self.image = self._drag_data.get("item")
-        print(self.image)
+        self.id_image = self._drag_data.get("item")
+        #print(self.position_initial,'initial cord result')
+        
+        
         print(self.ids)
         color, type, image, position = Pieces.get_piece(self.piece)
         print(position)
+        initial_position = POSITION_CENTER[position]
+        print(initial_position)
         moves = DICT_POSSIBLE_MOVES
         print(moves)
         row = self._drag_data.get('y')
         column = self._drag_data.get('x')
-        print(self.board.coords(69),'cord result')
-        print(row,column)
+        cords_dropped = self.board.coords(self.id_image)
+        print(cords_dropped,"dropped cords")
+        #print(row,column)
         row_int =int(row/100)
         column_int = int(column/100)
-        print(row_int,column_int)
+        #print(row_int,column_int)
         row_id = row_dict[row_int]
         column_id = column_dict[column_int]
         position_id = str(column_id) + str(row_id)
         snap_position_list = POSITION_CENTER[position_id]
-        print(snap_position_list)
+        #print(snap_position_list)
         if position_id in DICT_POSSIBLE_MOVES:
             self.piece.set_move_position(position_id)
-            #self.board.move(self.image,snap_position_list[0], snap_position_list[1])
-            self.board.move(self.image,450,450)
+            self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+            self.piece.set_move()
+            
         else:
             #self.board.move(self.image,row, column)
-            self.board.move(self.image,0,0)
-        print(self.board.coords(69),'cord result')
+            self.board.coords(self.id_image,initial_position)
+            self.piece.set_move_position(position)
+        print(self.board.coords(self.id_image),'cord result final')
         print(BOARD_CORDINATES)
 
         DICT_POSSIBLE_MOVES.clear()
