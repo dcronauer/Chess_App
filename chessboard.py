@@ -45,6 +45,8 @@ class Chess_GUI:
         print("grabbed",self._drag_data.get("item"),type)
         if type == "pawn":
             self.piece.pawn_moves()
+        elif type == "rook":
+            self.piece.rook_moves()
     def drag_stop(self, event):
         """End drag of an object"""
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
@@ -85,7 +87,7 @@ class Chess_GUI:
             self.board.coords(self.id_image,initial_position)
             self.piece.set_move_position(position)
         print(self.board.coords(self.id_image),'cord result final')
-        print(BOARD_CORDINATES)
+        
 
         DICT_POSSIBLE_MOVES.clear()
         self.position_initial.clear()
@@ -210,7 +212,7 @@ class Chess_GUI:
                 self.images[piece] = self.piece_image
                 
                 total += 1
-        print(BOARD_CORDINATES)
+        
     
 
             
