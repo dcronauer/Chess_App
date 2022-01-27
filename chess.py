@@ -1,4 +1,5 @@
 
+
 from turtle import position
 import chessboard
 import sys
@@ -65,7 +66,8 @@ class Pieces:
 
     def set_id(self,id):
         self.id = id 
-
+    
+    #movement functions by piece    
     def rook_moves(self):
         position = self.position
         max_range = 8
@@ -79,12 +81,6 @@ class Pieces:
         self.right(starting_row, starting_column, max_range, position)   
         print(DICT_POSSIBLE_MOVES)
         
-        
-       
-    def kill_piece(self):
-        self.BOARD_CORDINATES[self.position]
-        self.position = False
-        self.destroyed = True
     def pawn_moves(self):
         if self.moved == False:
             max_range = 2
@@ -97,7 +93,141 @@ class Pieces:
             row += 1
             DICT_POSSIBLE_MOVES[column+str(row)] = column +str(row)
         print(DICT_POSSIBLE_MOVES)
+    
+    def bishop_moves(self):
+        
+        position = self.position
+        row = int(position[1])
+        column = position[0]
+        starting_column = DICT_COLUMNS[column]
+        print('got to bishop method')     
+        self.left_diagonal(row,column,starting_column,position)
+        self.right_diagonal(row,column,starting_column,position)
+          
+    def queen_moves(self):
+        max_range = 8
+        position = self.position
+        row = int(position[1])
+        column = position[0]
+        starting_column = DICT_COLUMNS[column]
+        starting_row = DICT_ROWS[row]
+        print('got to queen method')     
+        self.left_diagonal(row,column,starting_column,position)
+        self.right_diagonal(row,column,starting_column,position)
+        self.above(starting_row, column, max_range, position)
+        self.below(starting_row, column, position)
+        self.left(starting_row,starting_column,max_range,position)
+        self.right(starting_row, starting_column, max_range, position) 
+    def king_moves(self):
+        max_range = 1
+        position = self.position
+        row = int(position[1])
+        column = position[0]
+        starting_column = DICT_COLUMNS[column]
+        starting_row = DICT_ROWS[row]
+        
+    
+    def left_diagonal(self,row, column, starting_column,position):
+        row_descending = row
+        row_ascending = row
+        lower_column = starting_column
+        upper_column = starting_column
+        color, piece_type, image, position = Pieces.get_piece(self)
+        print(color,piece_type)
+        print("lower column:",lower_column, "Row: ", row_descending)
+        while lower_column > 1 and row_descending <8 and row_descending >1:
+            print('entered lower_column loop')
+            lower_column -= 1
+            row_descending -=1 
             
+            column1 = DICT_COLUMNS_REVERSED[lower_column]
+            string = column1 + str(row_descending)
+            print(string, 'position')
+            self.check = self.BOARD_CORDINATES.get(string)
+            
+            if self.check != False:
+                color1, type1, image1, position1 = Pieces.get_piece(self.check)
+                print(color1,'check!= loop')
+                if color == color1:
+                    break
+                else:
+                    DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
+                    break
+            elif self.check == False:
+                DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
+        print('got to second while loop')
+        while upper_column > 1 and row_ascending <8 and row_descending >=1:
+            print('entered upper column loop')
+            upper_column -= 1
+            row_ascending += 1 
+            column1 = DICT_COLUMNS_REVERSED[upper_column]
+            string = column1 + str(row_ascending)
+            print(string)
+            self.check = self.BOARD_CORDINATES.get(string)
+            
+            if self.check != False:
+                color1, type1, image1, position1 = Pieces.get_piece(self.check)
+                print(color1,'check!= loop')
+                print(column1,row)
+                if color == color1:
+                    break
+                else:
+                    DICT_POSSIBLE_MOVES[column1+str(row_ascending)] = column1+str(row_ascending)
+                    break
+            elif self.check == False:
+                DICT_POSSIBLE_MOVES[column1+str(row_ascending)] = column1+str(row_ascending)
+        print(DICT_POSSIBLE_MOVES)    
+    def right_diagonal(self,row, column, starting_column,position):
+        row_descending = row
+        row_ascending = row
+        lower_column = starting_column
+        upper_column = starting_column
+        color, piece_type, image, position = Pieces.get_piece(self)
+        print(color,piece_type)
+        print("lower column:",lower_column, "Row: ", row_descending)
+        while lower_column < 8 and row_descending <8 and row_descending >1:
+            print('entered lower_column loop')
+            lower_column += 1
+            row_descending -=1 
+            
+            column1 = DICT_COLUMNS_REVERSED[lower_column]
+            string = column1 + str(row_descending)
+            print(string, 'position')
+            self.check = self.BOARD_CORDINATES.get(string)
+            
+            if self.check != False:
+                color1, type1, image1, position1 = Pieces.get_piece(self.check)
+                print(color1,'check!= loop')
+                if color == color1:
+                    break
+                else:
+                    DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
+                    break
+            elif self.check == False:
+                DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
+        print('got to second while loop')
+        while upper_column < 8 and row_ascending <8 and row_descending >=1:
+            print('entered upper column loop')
+            upper_column += 1
+            row_ascending += 1 
+            column1 = DICT_COLUMNS_REVERSED[upper_column]
+            string = column1 + str(row_ascending)
+            print(string)
+            self.check = self.BOARD_CORDINATES.get(string)
+            
+            if self.check != False:
+                color1, type1, image1, position1 = Pieces.get_piece(self.check)
+                print(color1,'check!= loop')
+                print(column1,row)
+                if color == color1:
+                    break
+                else:
+                    DICT_POSSIBLE_MOVES[column1+str(row_ascending)] = column1+str(row_ascending)
+                    break
+            elif self.check == False:
+                DICT_POSSIBLE_MOVES[column1+str(row_ascending)] = column1+str(row_ascending)
+        print(DICT_POSSIBLE_MOVES)  
+
 
     def above(self,starting_row, column, max_range,position):
         color, piece_type, image, position = Pieces.get_piece(self)
@@ -169,7 +299,10 @@ class Pieces:
                 break
             else:
                 DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
-
+    def kill_piece(self):
+        self.BOARD_CORDINATES[self.position]
+        self.position = False
+        self.destroyed = True
 # def create_pieces():
 #     total = 0
 #     for item in PIECE_DICTIONARY:
