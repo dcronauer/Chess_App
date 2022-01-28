@@ -153,11 +153,12 @@ class Pieces:
         color, piece_type, image, position = Pieces.get_piece(self)
         print(color,piece_type)
         print("lower column:",lower_column, "Row: ", row_descending)
-        while lower_column > 1 and row_descending <8 and row_descending >1 and max_range > 0:
+        while lower_column > 1 and row_descending <=8 and row_descending >1 and max_range > 0:
             print('entered lower_column loop')
             lower_column -= 1
             row_descending -=1 
-            max_range -=1
+            if piece_type == "king":
+                max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
             print(string, 'position')
@@ -175,11 +176,12 @@ class Pieces:
                 DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
         print('got to second while loop')
         max_range += 1
-        while upper_column > 1 and row_ascending <8 and row_descending >=1 and max_range > 0:
+        while upper_column > 1 and row_ascending <8 and row_ascending>=1 and max_range > 0:
             print('entered upper column loop')
             upper_column -= 1
             row_ascending += 1 
-            max_range -= 1
+            if piece_type == "king":
+                max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
             print(string)
@@ -205,11 +207,13 @@ class Pieces:
         color, piece_type, image, position = Pieces.get_piece(self)
         print(color,piece_type)
         print("lower column:",lower_column, "Row: ", row_descending)
-        while lower_column < 8 and row_descending <8 and row_descending >1 and max_range > 0:
+        while lower_column < 8 and row_descending <=8 and row_descending >1 and max_range > 0:
             print('entered lower_column loop')
             lower_column += 1
             row_descending -=1 
-            max_range -=1
+            if piece_type == "king":
+                max_range -= 1
+           
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
             print(string, 'position')
@@ -217,7 +221,7 @@ class Pieces:
             
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop')
+                print(color1,'check!= loop',type1)
                 if color == color1:
                     break
                 else:
@@ -231,7 +235,8 @@ class Pieces:
             print('entered upper column loop')
             upper_column += 1
             row_ascending += 1 
-            max_range -= 1
+            if piece_type == "king":
+                max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
             print(string)
