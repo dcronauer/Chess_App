@@ -26,7 +26,8 @@ class Pieces:
  'C3': False, 'C4': False, 'C5': False, 'C6': False, 'C7': False, 'C8': False, 'D1': False, 'D2': False, 'D3': False, 'D4': False, 'D5': False, 'D6': False, 'D7': False, 'D8': False, 'E1': False, 'E2': False, 'E3': False, 'E4': False, 'E5': False, 'E6': False, 
  'E7': False, 'E8': False, 'F1': False, 'F2': False, 'F3': False, 'F4': False, 'F5': False, 'F6': False, 'F7': False, 'F8': False, 'G1': False, 'G2': False, 'G3': False, 'G4': False, 'G5': False, 'G6': False, 'G7': False, 'G8': False, 'H1': False, 'H2': False, 
  'H3': False, 'H4': False, 'H5': False, 'H6': False, 'H7': False, 'H8': False}
-    def __init__(self, color, type, image, position = None, destroyed = False, kill = False, moved = False,cordinates=None, id=None):
+    def __init__(self, color, type, image, position = None, destroyed = False, kill = False, moved = False,cordinates=None, 
+    id=None, starting_row = None):
         self.color = color
         self.type = type
         self.image = image
@@ -36,6 +37,7 @@ class Pieces:
         self.moved = moved
         self.cordinates = cordinates
         self.id = id
+        self.starting_row = None
     
     #accessor
     def get_piece(self):
@@ -45,6 +47,9 @@ class Pieces:
         return self.id, self
     def get_color(self):
         return self.color
+    
+    def get_row(self):
+        return self.starting_row
     
     #mutator
     def set_position(self):
@@ -89,9 +94,15 @@ class Pieces:
         position = self.position
         row = int(position[1])
         column = position[0]
-        for i in range(max_range):
-            row += 1
-            DICT_POSSIBLE_MOVES[column+str(row)] = column +str(row)
+        
+        if self.starting_row == 2:
+            for i in range(max_range):
+                row += 1
+                DICT_POSSIBLE_MOVES[column+str(row)] = column +str(row)
+        if self.starting_row == 7:
+            for i in range(max_range):
+                row -=1
+                DICT_POSSIBLE_MOVES[column+str(row)] = column +str(row)
         print(DICT_POSSIBLE_MOVES)
     
     def bishop_moves(self):

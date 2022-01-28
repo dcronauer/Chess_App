@@ -197,7 +197,11 @@ class Chess_GUI:
             
             for i in range(list[3]):
                 piece = Pieces(list[0],list[1],list[2])
-                
+                color1, type1, image1, position1 = Pieces.get_piece(piece)
+                if type1 == "pawn" and color1 =="black":
+                    piece.starting_row = 7
+                elif type1 == "pawn" and color1 == "white":
+                    piece.starting_row = 2
                 DICT_PIECES[item+str(i+1)] = piece
                 DICT_PIECE_REVERSE[piece] = item + str(i+1)
                 piece.set_position()
