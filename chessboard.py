@@ -51,6 +51,8 @@ class Chess_GUI:
             self.piece.bishop_moves()
         elif type == "queen":
             self.piece.queen_moves()
+        elif type == "king":
+            self.piece.king_moves()
     def drag_stop(self, event):
         """End drag of an object"""
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}

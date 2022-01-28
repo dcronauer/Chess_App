@@ -76,7 +76,7 @@ class Pieces:
         starting_row = DICT_ROWS[row]
         starting_column = DICT_COLUMNS[column]
         self.above(starting_row, column, max_range, position)
-        self.below(starting_row, column, position)
+        self.below(starting_row, column, position,max_range)
         self.left(starting_row,starting_column,max_range,position)
         self.right(starting_row, starting_column, max_range, position)   
         print(DICT_POSSIBLE_MOVES)
@@ -95,14 +95,14 @@ class Pieces:
         print(DICT_POSSIBLE_MOVES)
     
     def bishop_moves(self):
-        
+        max_range = 8
         position = self.position
         row = int(position[1])
         column = position[0]
         starting_column = DICT_COLUMNS[column]
         print('got to bishop method')     
-        self.left_diagonal(row,column,starting_column,position)
-        self.right_diagonal(row,column,starting_column,position)
+        self.left_diagonal(row,column,starting_column,position,max_range)
+        self.right_diagonal(row,column,starting_column,position,max_range)
           
     def queen_moves(self):
         max_range = 8
@@ -112,12 +112,14 @@ class Pieces:
         starting_column = DICT_COLUMNS[column]
         starting_row = DICT_ROWS[row]
         print('got to queen method')     
-        self.left_diagonal(row,column,starting_column,position)
-        self.right_diagonal(row,column,starting_column,position)
+        
         self.above(starting_row, column, max_range, position)
-        self.below(starting_row, column, position)
+        self.below(starting_row, column, position,max_range)
         self.left(starting_row,starting_column,max_range,position)
         self.right(starting_row, starting_column, max_range, position) 
+        self.left_diagonal(row,column,starting_column,position,max_range)
+        self.right_diagonal(row,column,starting_column,position,max_range)
+    
     def king_moves(self):
         max_range = 1
         position = self.position
@@ -125,9 +127,14 @@ class Pieces:
         column = position[0]
         starting_column = DICT_COLUMNS[column]
         starting_row = DICT_ROWS[row]
+        self.above(starting_row, column, max_range, position)
+        self.below(starting_row, column, position,max_range)
+        self.left(starting_row,starting_column,max_range,position)
+        self.right(starting_row, starting_column, max_range, position) 
+        self.left_diagonal(row,column,starting_column,position,max_range)
+        self.right_diagonal(row,column,starting_column,position,max_range)
         
-    
-    def left_diagonal(self,row, column, starting_column,position):
+    def left_diagonal(self,row, column, starting_column,position,max_range):
         row_descending = row
         row_ascending = row
         lower_column = starting_column
@@ -135,11 +142,11 @@ class Pieces:
         color, piece_type, image, position = Pieces.get_piece(self)
         print(color,piece_type)
         print("lower column:",lower_column, "Row: ", row_descending)
-        while lower_column > 1 and row_descending <8 and row_descending >1:
+        while lower_column > 1 and row_descending <8 and row_descending >1 and max_range > 0:
             print('entered lower_column loop')
             lower_column -= 1
             row_descending -=1 
-            
+            max_range -=1
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
             print(string, 'position')
@@ -156,10 +163,12 @@ class Pieces:
             elif self.check == False:
                 DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
         print('got to second while loop')
-        while upper_column > 1 and row_ascending <8 and row_descending >=1:
+        max_range += 1
+        while upper_column > 1 and row_ascending <8 and row_descending >=1 and max_range > 0:
             print('entered upper column loop')
             upper_column -= 1
             row_ascending += 1 
+            max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
             print(string)
@@ -177,7 +186,7 @@ class Pieces:
             elif self.check == False:
                 DICT_POSSIBLE_MOVES[column1+str(row_ascending)] = column1+str(row_ascending)
         print(DICT_POSSIBLE_MOVES)    
-    def right_diagonal(self,row, column, starting_column,position):
+    def right_diagonal(self,row, column, starting_column,position,max_range):
         row_descending = row
         row_ascending = row
         lower_column = starting_column
@@ -185,11 +194,11 @@ class Pieces:
         color, piece_type, image, position = Pieces.get_piece(self)
         print(color,piece_type)
         print("lower column:",lower_column, "Row: ", row_descending)
-        while lower_column < 8 and row_descending <8 and row_descending >1:
+        while lower_column < 8 and row_descending <8 and row_descending >1 and max_range > 0:
             print('entered lower_column loop')
             lower_column += 1
             row_descending -=1 
-            
+            max_range -=1
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
             print(string, 'position')
@@ -205,11 +214,13 @@ class Pieces:
                     break
             elif self.check == False:
                 DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
+        max_range += 1
         print('got to second while loop')
-        while upper_column < 8 and row_ascending <8 and row_descending >=1:
+        while upper_column < 8 and row_ascending <8 and row_descending >=1 and max_range > 0:
             print('entered upper column loop')
             upper_column += 1
             row_ascending += 1 
+            max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
             print(string)
@@ -230,14 +241,18 @@ class Pieces:
 
 
     def above(self,starting_row, column, max_range,position):
-        color, piece_type, image, position = Pieces.get_piece(self)
+        king_range = max_range
+        color, piece_type, image,position = Pieces.get_piece(self)
         print(color,piece_type)
+        print(king_range)
+        if piece_type == "king":
+            max_range = 8
         #test, test1, test2, test3, test4
-        while max_range > starting_row:
+        while max_range > starting_row and king_range > 0:
             starting_row +=1
             string = str(column) + str(starting_row)
             print(string,"string")
-            
+            king_range -= 1
             self.check = self.BOARD_CORDINATES.get(string)
             print(self.check)
         
@@ -254,11 +269,13 @@ class Pieces:
                   break  
             elif self.check == False:
                 DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
-    def below(self,starting_row,column, position):
+    def below(self,starting_row,column, position,max_range):
+        king_range = max_range
         color, type_piece, image, position = Pieces.get_piece(self)
         print(color)
-        while starting_row > 1:
+        while starting_row > 1 and king_range > 0:
             starting_row -= 1
+            king_range -= 1
             string = column + str(starting_row)
             print(string,"string")
            
@@ -278,22 +295,24 @@ class Pieces:
             else:
                 DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
     def left(self,starting_row, starting_column, max_range, position):
+        king_range = max_range
         color, type, image, position = Pieces.get_piece(self)
         print(color)
-        while starting_column > 1:
+        while starting_column > 1 and king_range > 0:
             starting_column -=1
-            
+            king_range -=1
             column = DICT_COLUMNS_REVERSED[starting_column]
             if self.BOARD_CORDINATES.get(column+str(starting_row)) != False:
                 break
             else:
                 DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
     def right(self,starting_row, starting_column, max_range, position):
+        king_range = max_range
         color, type, image, position = Pieces.get_piece(self)
         print(color)
-        while starting_column <8:
+        while starting_column <8 and king_range >0:
             starting_column += 1
-            
+            king_range -= 1
             column = DICT_COLUMNS_REVERSED[starting_column]
             if self.BOARD_CORDINATES.get(column+str(starting_row)) != False:
                 break
