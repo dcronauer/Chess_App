@@ -115,17 +115,17 @@ class Pieces:
 
 
                 row += 1
-            column1 = DICT_COLUMNS_REVERSED[starting_column]
-            string = column1 + str(row)    
-            self.check = self.BOARD_CORDINATES.get(string)
-            print(self.check)
+                column1 = DICT_COLUMNS_REVERSED[starting_column]
+                string = column1 + str(row)    
+                self.check = self.BOARD_CORDINATES.get(string)
+                print(self.check)
         
             
             
-            if self.check != False:
-                pass      
-            elif self.check == False:
-                DICT_POSSIBLE_MOVES[string] = string 
+                if self.check != False:
+                 pass      
+                elif self.check == False:
+                  DICT_POSSIBLE_MOVES[string] = string 
 
         if self.starting_row == 7:
 
@@ -136,14 +136,14 @@ class Pieces:
                     self.right_diagonal(row,column,starting_column,position,max_range)
                     
                 row -=1
-            column1 = DICT_COLUMNS_REVERSED[starting_column]
-            string = column1 + str(row)    
-            self.check = self.BOARD_CORDINATES.get(string)
-            print(self.check)    
-            if self.check != False:
-                pass      
-            elif self.check == False:
-                DICT_POSSIBLE_MOVES[string] = string  
+                column1 = DICT_COLUMNS_REVERSED[starting_column]
+                string = column1 + str(row)    
+                self.check = self.BOARD_CORDINATES.get(string)
+                print(self.check)    
+                if self.check != False:
+                    pass      
+                elif self.check == False:
+                    DICT_POSSIBLE_MOVES[string] = string  
         print(DICT_POSSIBLE_MOVES)
     
     def bishop_moves(self):
