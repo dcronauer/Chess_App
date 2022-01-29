@@ -16,6 +16,7 @@ def main():
 class Chess_GUI:
     images = {}
     ids = {}
+
     array_rows = [1,2,3,4,5,6,7,8]
     position_initial = []
     
@@ -84,6 +85,20 @@ class Chess_GUI:
         snap_position_list = POSITION_CENTER[position_id]
         #print(snap_position_list)
         if position_id in DICT_POSSIBLE_MOVES:
+            dict_board = Pieces.get_board_cord(Pieces)
+            self.check = dict_board.get(position_id)
+            if self.check != False:
+                
+                color1, type1, image1, position1 = Pieces.get_piece(self.check)
+                #piece to die currently in spot that opposing piece could take
+                self.id_image2, piece = self.check.get_id()
+                print(self.id_image2)
+                self.ids.pop(self.id_image2)
+                self.images.pop(piece)
+                self.board.delete(self.id_image2)
+                Pieces.kill_piece(piece)
+
+
             self.piece.set_move_position(position_id)
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
             self.piece.set_move()
@@ -218,8 +233,9 @@ class Chess_GUI:
                 self.id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=("piece",))
                 piece.set_id(self.id)
                 self.ids[self.id] = piece
-
+                piece.set_board_image(self.piece_image)
                 self.images[piece] = self.piece_image
+
                 
                 total += 1
         
