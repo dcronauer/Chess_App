@@ -1,4 +1,5 @@
 
+from multiprocessing.dummy import Event
 from chess import *
 from PIL import ImageTk, Image
 import tkinter
@@ -35,9 +36,12 @@ class Chess_GUI:
         self.set_player_turn(self.player1, self.player2, turn)
 
         self._drag_data = {"x": 0, "y": 0, "item": None}
-        self.board.tag_bind("piece","<ButtonPress-1>", self.select_piece)
-        self.board.tag_bind("piece", "<ButtonRelease-1>", self.drag_stop)
-        self.board.tag_bind("piece", "<B1-Motion>", self.drag)
+        self.board.tag_bind("blackpiece","<ButtonPress-1>", self.select_piece)
+        self.board.tag_bind("blackpiece", "<ButtonRelease-1>", self.drag_stop)
+        self.board.tag_bind("blackpiece", "<B1-Motion>", self.drag)
+        self.board.tag_bind("whitepiece","<ButtonPress-1>", self.select_piece)
+        self.board.tag_bind("whitepiece", "<ButtonRelease-1>", self.drag_stop)
+        self.board.tag_bind("whitepiece", "<B1-Motion>",  self.drag)
 
     def set_player_turn(self, player1, player2,turn):
         if player1 == "white":
@@ -56,28 +60,31 @@ class Chess_GUI:
         result = self._drag_data.get("item")
         print(result, 'this is the result')
         tags_return = self.board.gettags(result)
-        if result[0] != self.player_turn.get(0):
+        piece_check = tags_return[0]
+        print(tags_return[0])
+        if piece_check != self.player_turn.get(0):
             print('we got to the test stage')
-        print(tags_return, 'these are the tag returns')
+            return
+        #print(tags_return, 'these are the tag returns')
         self.piece = self.ids[self._drag_data.get("item")]
         
         self.position_initial.append(self._drag_data["x"])
         self.position_initial.append(self._drag_data["y"])
         print(self.position_initial)
         
-        color, type, image, position = Pieces.get_piece(self.piece)
-        print("grabbed",self._drag_data.get("item"),type)
-        if type == "pawn":
+        color, type1, image, position = Pieces.get_piece(self.piece)
+        print("grabbed",self._drag_data.get("item"),type1)
+        if type1 == "pawn":
             self.piece.pawn_moves()
-        elif type == "rook":
+        elif type1 == "rook":
             self.piece.rook_moves()
-        elif type == "bishop":
+        elif type1 == "bishop":
             self.piece.bishop_moves()
-        elif type == "queen":
+        elif type1 == "queen":
             self.piece.queen_moves()
-        elif type == "king":
+        elif type1 == "king":
             self.piece.king_moves()
-        elif type == "knight":
+        elif type1 == "knight":
             self.piece.knight_moves()
         print(DICT_POSSIBLE_MOVES)
     def drag_stop(self, event):
