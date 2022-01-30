@@ -54,6 +54,9 @@ class Chess_GUI:
             self.piece.queen_moves()
         elif type == "king":
             self.piece.king_moves()
+        elif type == "knight":
+            self.piece.knight_moves()
+        print(DICT_POSSIBLE_MOVES)
     def drag_stop(self, event):
         """End drag of an object"""
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
@@ -70,7 +73,7 @@ class Chess_GUI:
         initial_position = POSITION_CENTER[position]
         print(initial_position)
         moves = DICT_POSSIBLE_MOVES
-        print(moves)
+       
         row = self._drag_data.get('y')
         column = self._drag_data.get('x')
         cords_dropped = self.board.coords(self.id_image)
