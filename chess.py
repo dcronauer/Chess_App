@@ -198,6 +198,8 @@ class Pieces:
         #self.lower_right(position, starting_column, starting_row)
         self.upper_left(position, starting_column, starting_row)
         self.upper_right(position, starting_column, starting_row)
+        self.lower_left(position, starting_column, starting_row)
+        self.lower_right(position, starting_column, starting_row)
         
 
 
@@ -222,7 +224,7 @@ class Pieces:
         one_two_row = starting_row + 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column +2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'ll')
+        print(one_two_string,'ur')
         self.check = self.BOARD_CORDINATES.get(one_two_string)
         print(self.check)
         if self.check == False:
@@ -255,7 +257,7 @@ class Pieces:
         one_two_row = starting_row + 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column-2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'ll')
+        print(one_two_string,'ul')
         self.check = self.BOARD_CORDINATES.get(one_two_string)
         print(self.check)
         if self.check == False:
@@ -266,7 +268,70 @@ class Pieces:
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
+    def lower_right(self,position,starting_column, starting_row):
+        color, type, image, position = Pieces.get_piece(self)
+        print(color,'knight color moving')
+        two_one_row = starting_row - 2
+        two_one_column = DICT_COLUMNS_REVERSED.get(starting_column + 1,"z")
+        two_one_string = two_one_column + str(two_one_row)
+        print(two_one_string)
+        self.check = self.BOARD_CORDINATES.get(two_one_string)
+        print(self.check)
+        if self.check == False:
+            DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
+        elif self.check != None:
+            color1, type1, image1, position1 = Pieces.get_piece(self.check)
+            print(color1,'check!= loop')    
+                
+            if color != color1:
+                DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
         
+        one_two_row = starting_row - 1
+        one_two_column = DICT_COLUMNS_REVERSED.get(starting_column +2, "z")
+        one_two_string = one_two_column + str(one_two_row)
+        print(one_two_string,'lr')
+        self.check = self.BOARD_CORDINATES.get(one_two_string)
+        print(self.check)
+        if self.check == False:
+            DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
+        elif self.check != None:
+            color1, type1, image1, position1 = Pieces.get_piece(self.check)
+            print(color1,'check!= loop')    
+                
+            if color != color1:
+                DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
+    def lower_left(self,position,starting_column, starting_row):
+        color, type, image, position = Pieces.get_piece(self)
+        print(color,'knight color moving')
+        two_one_row = starting_row - 2
+        two_one_column = DICT_COLUMNS_REVERSED.get(starting_column - 1,"z")
+        two_one_string = two_one_column + str(two_one_row)
+        print(two_one_string)
+        self.check = self.BOARD_CORDINATES.get(two_one_string)
+        print(self.check)
+        if self.check == False:
+            DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
+        elif self.check != None:
+            color1, type1, image1, position1 = Pieces.get_piece(self.check)
+            print(color1,'check!= loop')    
+                
+            if color != color1:
+                DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
+        
+        one_two_row = starting_row - 1
+        one_two_column = DICT_COLUMNS_REVERSED.get(starting_column-2, "z")
+        one_two_string = one_two_column + str(one_two_row)
+        print(one_two_string,'ll')
+        self.check = self.BOARD_CORDINATES.get(one_two_string)
+        print(self.check)
+        if self.check == False:
+            DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
+        elif self.check != None:
+            color1, type1, image1, position1 = Pieces.get_piece(self.check)
+            print(color1,'check!= loop')    
+                
+            if color != color1:
+                DICT_POSSIBLE_MOVES[one_two_string] = one_two_string    
     def left_diagonal(self,row, column, starting_column,position,max_range):
         row_descending = row
         row_ascending = row
