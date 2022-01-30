@@ -7,7 +7,10 @@ from tkinter import Tk, ttk
 def main():
     print("wea are here")
     #start gui
-    myboard = Chess_GUI()
+    player1 = "white"
+    player2 = "black"
+    turn = "white"
+    myboard = Chess_GUI(player1, player2, turn)
     # set up main loop
     tkinter.mainloop()
 
@@ -16,26 +19,46 @@ def main():
 class Chess_GUI:
     images = {}
     ids = {}
-
+    player_turn = {}
     array_rows = [1,2,3,4,5,6,7,8]
     position_initial = []
     
-    def __init__(self):
+    def __init__(self,player1, player2,turn):
+        self.player1 = player1
+        self.player2 = player2
+        self.turn = turn
         self.main_window = tkinter.Tk()          
         self.main_window.geometry("800x850")
         self.main_window.title('Chess App')
         self.main_window.minsize(800,800)
         self.create_canvas()
+        self.set_player_turn(self.player1, self.player2, turn)
+
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.board.tag_bind("piece","<ButtonPress-1>", self.select_piece)
         self.board.tag_bind("piece", "<ButtonRelease-1>", self.drag_stop)
         self.board.tag_bind("piece", "<B1-Motion>", self.drag)
-             
+
+    def set_player_turn(self, player1, player2,turn):
+        if player1 == "white":
+            self.player_turn[0] = "whitepiece"
+        else:
+            self.player_turn[0] = "blackpiece"
+        print(self.player_turn) 
+        
+
+
     def select_piece(self,event):
         print(DICT_POSSIBLE_MOVES)
         self._drag_data["item"] = self.board.find_closest(event.x,event.y)[0]
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+        result = self._drag_data.get("item")
+        print(result, 'this is the result')
+        tags_return = self.board.gettags(result)
+        if result[0] != self.player_turn.get(0):
+            print('we got to the test stage')
+        print(tags_return, 'these are the tag returns')
         self.piece = self.ids[self._drag_data.get("item")]
         
         self.position_initial.append(self._drag_data["x"])
@@ -105,6 +128,11 @@ class Chess_GUI:
             self.piece.set_move_position(position_id)
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
             self.piece.set_move()
+            if self.player_turn.get(0) == "whitepiece":
+                self.player_turn[0] = "blackpiece"
+            else:
+                self.player_turn[0] = "whitepiece"
+            print(self.player_turn[0])
             
         else:
             #self.board.move(self.image,row, column)
@@ -119,6 +147,7 @@ class Chess_GUI:
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
         self._drag_data["y"] = 0
+        print(self.player_turn[0])
     def drag(self, event):
         """Handle dragging of an object"""
         # compute how much the mouse has moved
@@ -233,7 +262,11 @@ class Chess_GUI:
                 
                 # self.label = ttk.Label(self.frame2,image = self.piece_image)
                 # self.label.grid(row = total, column=0)
-                self.id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=("piece",))
+                if color1 == "black":
+                    tag_string ="blackpiece"
+                elif color1 == "white":
+                    tag_string = "whitepiece"
+                self.id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=(tag_string,"piece"))
                 piece.set_id(self.id)
                 self.ids[self.id] = piece
                 piece.set_board_image(self.piece_image)
