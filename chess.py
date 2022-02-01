@@ -1,6 +1,6 @@
 
 
-from turtle import position
+
 import chessboard
 import sys
 #import pygame
@@ -20,12 +20,13 @@ PIECE_DICTIONARY = {'wp': ['white', 'pawn', 'images/white_p.png',8],  'wn': ['wh
 POSITION_START = {'wr1': 'A1', 'wp1': 'A2', 'bp1': 'A7', 'br1': 'A8', 'wn1': 'B1', 'wp2': 'B2', 'bp2': 'B7', 'bn1': 'B8', 'wb1': 'C1', 'wp3': 'C2', 'bp3': 'C7', 'bb1': 'C8', 'wq1': 'D1', 'wp4': 'D2', 'bp4': 'D7', 'bq1': 'D8', 
 'wk1': 'E1', 'wp5': 'E2', 'bp5': 'E7', 'bk1': 'E8', 'wb2': 'F1', 'wp6': 'F2', 'bp6': 'F7', 'bb2': 'F8', 'wn2': 'G1', 'wp7': 'G2', 'bp7': 'G7', 'bn2': 'G8', 'wr2': 'H1', 'wp8': 'H2', 'bp8': 'H7', 'br2': 'H8'}
 POSITION_CENTER = {'A1': [50, 750], 'A2': [50, 650], 'A3': [50, 550], 'A4': [50, 450], 'A5': [50, 350], 'A6': [50, 250], 'A7': [50, 150], 'A8': [50, 50], 'B1': [150, 750], 'B2': [150, 650], 'B3': [150, 550], 'B4': [150, 450], 'B5': [150, 350], 'B6': [150, 250], 'B7': [150, 150], 'B8': [150, 50], 'C1': [250, 750], 'C2': [250, 650], 'C3': [250, 550], 'C4': [250, 450], 'C5': [250, 350], 'C6': [250, 250], 'C7': [250, 150], 'C8': [250, 50], 'D1': [350, 750], 'D2': [350, 650], 'D3': [350, 550], 'D4': [350, 450], 'D5': [350, 350], 'D6': [350, 250], 'D7': [350, 150], 'D8': [350, 50], 'E1': [450, 750], 'E2': [450, 650], 'E3': [450, 550], 'E4': [450, 450], 'E5': [450, 350], 'E6': [450, 250], 'E7': [450, 150], 'E8': [450, 50], 'F1': [550, 750], 'F2': [550, 650], 'F3': [550, 550], 'F4': [550, 450], 'F5': [550, 350], 'F6': [550, 250], 'F7': [550, 150], 'F8': [550, 50], 'G1': [650, 750], 'G2': [650, 650], 'G3': [650, 550], 'G4': [650, 450], 'G5': [650, 350], 'G6': [650, 250], 'G7': [650, 150], 'G8': [650, 50], 'H1': [750, 750], 'H2': [750, 650], 'H3': [750, 550], 'H4': [750, 450], 'H5': [750, 350], 'H6': [750, 250], 'H7': [750, 150], 'H8': [750, 50]}
-
+CASTLE_DICT = {"white": False, "black": False}
 class Pieces:
     BOARD_CORDINATES = {'A1': False, 'A2': False, 'A3': False , 'A4': False, 'A5': False, 'A6': False, 'A7': False, 'A8': False, 'B1': False, 'B2': False , 'B3': False, 'B4': False, 'B5': False, 'B6': False, 'B7': False, 'B8': False, 'C1': False, 'C2': False, 
  'C3': False, 'C4': False, 'C5': False, 'C6': False, 'C7': False, 'C8': False, 'D1': False, 'D2': False, 'D3': False, 'D4': False, 'D5': False, 'D6': False, 'D7': False, 'D8': False, 'E1': False, 'E2': False, 'E3': False, 'E4': False, 'E5': False, 'E6': False, 
  'E7': False, 'E8': False, 'F1': False, 'F2': False, 'F3': False, 'F4': False, 'F5': False, 'F6': False, 'F7': False, 'F8': False, 'G1': False, 'G2': False, 'G3': False, 'G4': False, 'G5': False, 'G6': False, 'G7': False, 'G8': False, 'H1': False, 'H2': False, 
  'H3': False, 'H4': False, 'H5': False, 'H6': False, 'H7': False, 'H8': False}
+    
     def __init__(self, color, type, image, position = None, destroyed = False, kill = False, moved = False,cordinates=None, 
     id=None, starting_row = None,board_image = None):
         self.color = color
@@ -55,6 +56,8 @@ class Pieces:
     def get_board_cord(self):
         print(self.BOARD_CORDINATES)
         return self.BOARD_CORDINATES
+    def get_moved(self):
+        return self.moved
     
     #mutator
     def set_position(self):
@@ -69,7 +72,7 @@ class Pieces:
         print(self.position)
 
         self.BOARD_CORDINATES[self.position] = self
-        print(self.BOARD_CORDINATES)
+        
     def set_move(self):
         self.moved = True
         print("moved is true")
@@ -111,17 +114,11 @@ class Pieces:
                     max_range = 1
                     self.left_diagonal(row,column,starting_column,position,max_range)
                     self.right_diagonal(row,column,starting_column,position,max_range)
-                    
-
-
                 row += 1
                 column1 = DICT_COLUMNS_REVERSED[starting_column]
                 string = column1 + str(row)    
                 self.check = self.BOARD_CORDINATES.get(string)
                 print(self.check)
-        
-            
-            
                 if self.check != False:
                  pass      
                 elif self.check == False:
@@ -174,6 +171,7 @@ class Pieces:
     
     def king_moves(self):
         max_range = 1
+        self.castle_check()
         position = self.position
         row = int(position[1])
         column = position[0]
@@ -201,6 +199,44 @@ class Pieces:
         self.lower_left(position, starting_column, starting_row)
         self.lower_right(position, starting_column, starting_row)
         
+    def castle_check(self):
+        color, type1, image, position = Pieces.get_piece(self)
+        if self.moved == False:
+            if self.BOARD_CORDINATES.get('H1') != False:
+                self.piece_white = self.BOARD_CORDINATES.get('H1')
+                print(self.piece_white)
+                color1, type2, image1, position1 = Pieces.get_piece(self.piece_white)
+                rook_moved = self.piece_white.moved
+                print(rook_moved)
+            if self.BOARD_CORDINATES.get('H8') != False:
+                self.piece_black = self.BOARD_CORDINATES.get('H8')
+                print(self.piece_black)
+                color2, type3, image2, position2 = Pieces.get_piece(self.piece_black)
+                rook_moved_black = self.piece_black.moved
+                print(rook_moved_black)
+            
+            
+                print('got to false if')
+            if color == "white":
+                print('got to white if')
+                if self.BOARD_CORDINATES.get('F1') == False and self.BOARD_CORDINATES.get('G1') == False \
+                    and type2 == "rook" and rook_moved == False:
+                    print("got to conditions met")
+                    DICT_POSSIBLE_MOVES['G1'] = "G1"
+                    CASTLE_DICT[color] = "Short"
+            elif color == "black":
+                print('got to black if')
+                if self.BOARD_CORDINATES.get('F8') == False and self.BOARD_CORDINATES.get('G8') == False \
+                    and type2 == "rook" and rook_moved == False:
+                    print("got to conditions met")
+                    DICT_POSSIBLE_MOVES['G8'] = "G8"
+                    CASTLE_DICT[color] = "Short"
+
+
+                    
+                
+                    
+
 
 
     def upper_right(self,position,starting_column, starting_row):

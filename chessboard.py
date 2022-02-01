@@ -120,6 +120,31 @@ class Chess_GUI:
         if position_id in DICT_POSSIBLE_MOVES:
             dict_board = Pieces.get_board_cord(Pieces)
             self.check = dict_board.get(position_id)
+            
+            castle_status = CASTLE_DICT.get(color)
+            if type == "king" and castle_status == "Short":
+                if color == "white":
+                    print("got to position if statement white")
+                    
+                    self.rook = Pieces.BOARD_CORDINATES.get('H1')
+                    color_rook, type4, image4, position4 = Pieces.get_piece(self.rook)
+                    print(color_rook, type4)
+                    rook_id =Pieces.get_id(self.rook)
+                    print(rook_id)
+                    print(self.id_image, "just added check")
+                    
+                    
+                    self.piece.set_move_position(position_id)
+                    self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+                    self.piece.set_move()
+                    self.rook.set_move_position("F1")
+                    self.board.coords(rook_id[0],550,750)
+                    self.rook.set_move()
+
+                
+
+            
+            
             if self.check != False:
                 
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
@@ -154,6 +179,8 @@ class Chess_GUI:
         self._drag_data["item"] = None
         self._drag_data["x"] = 0
         self._drag_data["y"] = 0
+        CASTLE_DICT["black"] = False
+        CASTLE_DICT["white"] = False
         print(self.player_turn[0])
     def drag(self, event):
         """Handle dragging of an object"""
