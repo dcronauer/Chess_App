@@ -88,7 +88,7 @@ class Chess_GUI:
             self.piece.knight_moves()
         print(DICT_POSSIBLE_MOVES)
     def drag_stop(self, event):
-        """End drag of an object"""
+        
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
         row_dict = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1}
         
@@ -115,14 +115,16 @@ class Chess_GUI:
         row_id = row_dict[row_int]
         column_id = column_dict[column_int]
         position_id = str(column_id) + str(row_id)
+        print(position_id, 'this is the position id')
         snap_position_list = POSITION_CENTER[position_id]
         #print(snap_position_list)
         if position_id in DICT_POSSIBLE_MOVES:
             dict_board = Pieces.get_board_cord(Pieces)
             self.check = dict_board.get(position_id)
-            
-            castle_status = CASTLE_DICT.get(color)
-            if type == "king" and castle_status == "Short":
+            castle_status_long = CASTLE_DICT_LONG.get(color)
+            castle_status_short = CASTLE_DICT.get(color)
+            print(castle_status_short, castle_status_long)
+            if type == "king" and castle_status_short == "Short" and (position_id == "G1" or position_id == "G8"):
                 if color == "white":
                     print("got to position if statement white")
                     
@@ -140,7 +142,54 @@ class Chess_GUI:
                     self.rook.set_move_position("F1")
                     self.board.coords(rook_id[0],550,750)
                     self.rook.set_move()
-
+                elif color == "black":
+                    self.rook = Pieces.BOARD_CORDINATES.get('H8')
+                    color_rook, type4, image4, position4 = Pieces.get_piece(self.rook)
+                    print(color_rook, type4)
+                    rook_id =Pieces.get_id(self.rook)
+                    print(rook_id)
+                    print(self.id_image, "just added check")
+                    
+                    
+                    self.piece.set_move_position(position_id)
+                    self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+                    self.piece.set_move()
+                    self.rook.set_move_position("F8")
+                    self.board.coords(rook_id[0],550,50)
+                    self.rook.set_move()
+            if type == "king" and castle_status_long == "Long" and (position_id == "C1" or position_id == "C8"):    
+                if color == "white":
+                    print("got to position if statement white")
+                    
+                    self.rook = Pieces.BOARD_CORDINATES.get('A1')
+                    color_rook, type4, image4, position4 = Pieces.get_piece(self.rook)
+                    print(color_rook, type4)
+                    rook_id =Pieces.get_id(self.rook)
+                    print(rook_id)
+                    print(self.id_image, "just added check")
+                    
+                    
+                    self.piece.set_move_position(position_id)
+                    self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+                    self.piece.set_move()
+                    self.rook.set_move_position("D1")
+                    self.board.coords(rook_id[0],350,750)
+                    self.rook.set_move()
+                elif color == "black":
+                    self.rook = Pieces.BOARD_CORDINATES.get('A8')
+                    color_rook, type4, image4, position4 = Pieces.get_piece(self.rook)
+                    print(color_rook, type4)
+                    rook_id =Pieces.get_id(self.rook)
+                    print(rook_id)
+                    print(self.id_image, "just added check")
+                    
+                    
+                    self.piece.set_move_position(position_id)
+                    self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+                    self.piece.set_move()
+                    self.rook.set_move_position("F8")
+                    self.board.coords(rook_id[0],350,50)
+                    self.rook.set_move()    
                 
 
             
@@ -160,6 +209,7 @@ class Chess_GUI:
             self.piece.set_move_position(position_id)
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
             self.piece.set_move()
+            
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
             else:
@@ -170,8 +220,15 @@ class Chess_GUI:
             #self.board.move(self.image,row, column)
             self.board.coords(self.id_image,initial_position)
             self.piece.set_move_position(position)
+            
+           
         print(self.board.coords(self.id_image),'cord result final')
-        
+        row_pawn = Pieces.get_row(self.piece)
+        print(row_pawn, "row_pawn")
+        print(type)
+        if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
+                print("got inside promote if")
+                Pieces.promote_pawn(self.piece)
 
         DICT_POSSIBLE_MOVES.clear()
         self.position_initial.clear()
@@ -181,6 +238,8 @@ class Chess_GUI:
         self._drag_data["y"] = 0
         CASTLE_DICT["black"] = False
         CASTLE_DICT["white"] = False
+        CASTLE_DICT_LONG["black"] = False
+        CASTLE_DICT_LONG["white"] = False
         print(self.player_turn[0])
     def drag(self, event):
         """Handle dragging of an object"""
