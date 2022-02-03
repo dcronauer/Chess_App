@@ -229,6 +229,7 @@ class Chess_GUI:
         if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
                 print("got inside promote if")
                 self.promote_pawn(self.piece)
+               
 
         DICT_POSSIBLE_MOVES.clear()
         self.position_initial.clear()
@@ -263,6 +264,11 @@ class Chess_GUI:
         self.board.delete(self.id_image)
         Pieces.kill_piece(piece)
         print(Pieces.BOARD_CORDINATES)
+        desired_type = "queen"
+        string = color1 + desired_type
+        print(string)
+        list = PIECE_DICTIONARY.get(string)
+        self.create_piece_promote(list,position1)
 
 
     def create_canvas(self):
@@ -342,8 +348,10 @@ class Chess_GUI:
         height += 100
 
         return x, y, height, width   
-    def create_piece_promote(self,item):
+    def create_piece_promote(self,list,position_promote):
+        print(list)
         piece = Pieces(list[0],list[1],list[2])
+        
         color1, type1, image1, position1 = Pieces.get_piece(piece)
         if type1 == "pawn" and color1 =="black":
             piece.starting_row = 7
@@ -358,7 +366,7 @@ class Chess_GUI:
         count_piece = DICT_COUNT_PIECES.get(key_value_string)
         Pieces.set_piece_number(piece, count_piece)
         
-        piece.set_position()
+        Pieces.set_promote_position(piece,position_promote)
         
         #self.image = Image.open(piece.image)
         self.piece_image = ImageTk.PhotoImage(file=piece.image)
