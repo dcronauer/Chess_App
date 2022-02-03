@@ -228,7 +228,7 @@ class Chess_GUI:
         print(type)
         if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
                 print("got inside promote if")
-                Pieces.promote_pawn(self.piece)
+                self.promote_pawn(self.piece)
 
         DICT_POSSIBLE_MOVES.clear()
         self.position_initial.clear()
@@ -251,6 +251,19 @@ class Chess_GUI:
         # record the new position
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+
+    def promote_pawn(self,promote_piece):
+        print('got to promote pawn')
+        color1, type1, image1, position1 = Pieces.get_piece(promote_piece)
+        #piece to die currently in spot that opposing piece could take
+        self.id_image, piece = Pieces.get_id(promote_piece)
+        print(self.id_image)
+        self.ids.pop(self.id_image)
+        self.images.pop(piece)
+        self.board.delete(self.id_image)
+        Pieces.kill_piece(piece)
+        print(Pieces.BOARD_CORDINATES)
+
 
     def create_canvas(self):
         
@@ -329,7 +342,57 @@ class Chess_GUI:
         height += 100
 
         return x, y, height, width   
- 
+    def create_piece_promote(self,item):
+        piece = Pieces(list[0],list[1],list[2])
+        color1, type1, image1, position1 = Pieces.get_piece(piece)
+        if type1 == "pawn" and color1 =="black":
+            piece.starting_row = 7
+        elif type1 == "pawn" and color1 == "white":
+            piece.starting_row = 2
+        key_value_string = color1 + type1
+        count = DICT_COUNT_PIECES.get(key_value_string,0)
+        key_value_pair = {key_value_string: count + 1}
+        DICT_PIECES[key_value_string + str(count)] = piece
+        DICT_PIECE_REVERSE[piece] = key_value_string + str(count + 1)
+        DICT_COUNT_PIECES.update(key_value_pair)
+        count_piece = DICT_COUNT_PIECES.get(key_value_string)
+        Pieces.set_piece_number(piece, count_piece)
+        
+        piece.set_position()
+        
+        #self.image = Image.open(piece.image)
+        self.piece_image = ImageTk.PhotoImage(file=piece.image)
+
+        list1 = POSITION_CENTER[piece.position]
+        x = list1[0]
+        y = list1[1]
+        
+        # self.label = ttk.Label(self.frame2,image = self.piece_image)
+        # self.label.grid(row = total, column=0)
+        if color1 == "black":
+            tag_string ="blackpiece"
+        elif color1 == "white":
+            tag_string = "whitepiece"
+        self.id = self.board.create_image(x,y,anchor="center",image=self.piece_image,tags=(tag_string,"piece"))
+        piece.set_id(self.id)
+        self.ids[self.id] = piece
+        piece.set_board_image(self.piece_image)
+        self.images[piece] = self.piece_image
+        
+                
+                
+
+                
+        
+        print(DICT_COUNT_PIECES)
+        
+        
+
+       
+        
+
+
+
     def create_pieces(self):  
         total = 0
         for item in PIECE_DICTIONARY:
@@ -342,8 +405,15 @@ class Chess_GUI:
                     piece.starting_row = 7
                 elif type1 == "pawn" and color1 == "white":
                     piece.starting_row = 2
-                DICT_PIECES[item+str(i+1)] = piece
-                DICT_PIECE_REVERSE[piece] = item + str(i+1)
+                key_value_string = color1 + type1
+                count = DICT_COUNT_PIECES.get(key_value_string,0)
+                key_value_pair = {key_value_string: count + 1}
+                DICT_PIECES[key_value_string + str(count)] = piece
+                DICT_PIECE_REVERSE[piece] = key_value_string + str(count + 1)
+                DICT_COUNT_PIECES.update(key_value_pair)
+                count_piece = DICT_COUNT_PIECES.get(key_value_string)
+                Pieces.set_piece_number(piece, count_piece)
+                
                 piece.set_position()
                 
                 #self.image = Image.open(piece.image)
@@ -364,10 +434,13 @@ class Chess_GUI:
                 self.ids[self.id] = piece
                 piece.set_board_image(self.piece_image)
                 self.images[piece] = self.piece_image
+               
+                
+                
 
                 
                 total += 1
-        
+        print(DICT_COUNT_PIECES)
     
 
             
