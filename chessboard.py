@@ -107,6 +107,14 @@ class Chess_GUI:
         row = self._drag_data.get('y')
         column = self._drag_data.get('x')
         cords_dropped = self.board.coords(self.id_image)
+        if row > 800 or row <0 or column > 800 or column < 0:
+            self.board.coords(self.id_image,initial_position)
+            self.piece.set_move_position(position)
+            self.drop_reset()
+            return
+            
+
+
         print(cords_dropped,"dropped cords")
         #print(row,column)
         row_int =int(row/100)
@@ -230,7 +238,9 @@ class Chess_GUI:
                 print("got inside promote if")
                 self.promote_pawn(self.piece)
                
+        self.drop_reset()
 
+    def drop_reset(self):
         DICT_POSSIBLE_MOVES.clear()
         self.position_initial.clear()
         # reset the drag information
@@ -242,6 +252,9 @@ class Chess_GUI:
         CASTLE_DICT_LONG["black"] = False
         CASTLE_DICT_LONG["white"] = False
         print(self.player_turn[0])
+
+    
+    
     def drag(self, event):
         """Handle dragging of an object"""
         # compute how much the mouse has moved
