@@ -214,9 +214,10 @@ class Chess_GUI:
                 Pieces.kill_piece(piece)
 
 
-            self.piece.set_move_position(position_id)
+            '''self.piece.set_move_position(position_id)
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
-            self.piece.set_move()
+            self.piece.set_move()'''
+            self.piece_position_move(position_id,snap_position_list,self.piece)
             
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
@@ -232,13 +233,17 @@ class Chess_GUI:
            
         print(self.board.coords(self.id_image),'cord result final')
         row_pawn = Pieces.get_row(self.piece)
-        print(row_pawn, "row_pawn")
-        print(type)
         if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
                 print("got inside promote if")
                 self.promote_pawn(self.piece)
                
         self.drop_reset()
+    def piece_position_move(self,position_id,snap_position_list,piece):
+            piece.set_move_position(position_id)
+            self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
+            piece.set_move()
+
+
 
     def drop_reset(self):
         DICT_POSSIBLE_MOVES.clear()
