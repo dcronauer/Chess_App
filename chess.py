@@ -47,7 +47,7 @@ class Pieces:
         self.starting_row = None
         self.board_image = board_image
         self.piece_number = piece_number
-    
+        
     #accessor
     def get_piece(self):
         return (self.color,self.type,self.image, self.position)
@@ -112,6 +112,7 @@ class Pieces:
     def set_board_image(self,board_image):
         self.board_image = board_image
     
+    
 
     #promote pawn
    
@@ -129,7 +130,8 @@ class Pieces:
         self.right(starting_row, starting_column, max_range, position)   
         
         
-    def pawn_moves(self):
+    def pawn_moves(self,enpassant,enpassant_list):
+        print(enpassant_list, "these are the pawns you can enpassant")
         if self.moved == False:
             max_range = 2
         else:
@@ -150,7 +152,7 @@ class Pieces:
                 column1 = DICT_COLUMNS_REVERSED[starting_column]
                 string = column1 + str(row)    
                 self.check = self.BOARD_CORDINATES.get(string)
-                print(self.check)
+                
                 if self.check != False:
                  pass      
                 elif self.check == False:
@@ -168,7 +170,7 @@ class Pieces:
                 column1 = DICT_COLUMNS_REVERSED[starting_column]
                 string = column1 + str(row)    
                 self.check = self.BOARD_CORDINATES.get(string)
-                print(self.check)    
+                   
                 if self.check != False:
                     pass      
                 elif self.check == False:
@@ -220,7 +222,7 @@ class Pieces:
     def knight_moves(self):
         
         position = self.position
-        print(position)
+        
         row = int(position[1])
         column = position[0]
         starting_column = DICT_COLUMNS[column]
@@ -237,31 +239,22 @@ class Pieces:
         if self.moved == False:
             if self.BOARD_CORDINATES.get('H1') != False:
                 self.piece_white = self.BOARD_CORDINATES.get('H1')
-                print(self.piece_white)
                 color1, type2, image1, position1 = Pieces.get_piece(self.piece_white)
                 rook_moved = self.piece_white.moved
-                print(rook_moved)
+               
             if self.BOARD_CORDINATES.get('H8') != False:
                 self.piece_black = self.BOARD_CORDINATES.get('H8')
-                print(self.piece_black)
                 color2, type3, image2, position2 = Pieces.get_piece(self.piece_black)
                 rook_moved_black = self.piece_black.moved
-                print(rook_moved_black)
-            
-            
-                print('got to false if')
+                
             if color == "white":
-                print('got to white if')
                 if self.BOARD_CORDINATES.get('F1') == False and self.BOARD_CORDINATES.get('G1') == False \
                     and type2 == "rook" and rook_moved == False:
-                    print("got to conditions met")
                     DICT_POSSIBLE_MOVES['G1'] = "G1"
                     CASTLE_DICT[color] = "Short"
             elif color == "black":
-                print('got to black if')
                 if self.BOARD_CORDINATES.get('F8') == False and self.BOARD_CORDINATES.get('G8') == False \
                     and type3 == "rook" and rook_moved_black == False:
-                    print("got to conditions met")
                     DICT_POSSIBLE_MOVES['G8'] = "G8"
                     CASTLE_DICT[color] = "Short"
                  
@@ -270,47 +263,34 @@ class Pieces:
         if self.moved == False:
             if self.BOARD_CORDINATES.get('A1') != False:
                 self.piece_white = self.BOARD_CORDINATES.get('A1')
-                print(self.piece_white)
                 color1, type2, image1, position1 = Pieces.get_piece(self.piece_white)
                 rook_moved = self.piece_white.moved
-                print(rook_moved)
             if self.BOARD_CORDINATES.get('A8') != False:
                 self.piece_black = self.BOARD_CORDINATES.get('A8')
-                print(self.piece_black)
                 color2, type3, image2, position2 = Pieces.get_piece(self.piece_black)
                 rook_moved_black = self.piece_black.moved
-                print(rook_moved_black)
-                print('got to false if')    
             
             if color == "white":
-                print('got to white if')
                 if self.BOARD_CORDINATES.get('D1') == False and self.BOARD_CORDINATES.get('C1') == False \
                     and self.BOARD_CORDINATES.get("B1") == False and type2 == "rook" and rook_moved == False:
-                    print("got to conditions met")
                     DICT_POSSIBLE_MOVES['C1'] = "C1"
                     CASTLE_DICT_LONG[color] = "Long"
             elif color == "black":
-                print('got to black if')
                 if self.BOARD_CORDINATES.get('D8') == False and self.BOARD_CORDINATES.get('C8') == False \
                     and self.BOARD_CORDINATES.get("B8") == False and type3 == "rook" and rook_moved_black == False:
-                    print("got to conditions met")
                     DICT_POSSIBLE_MOVES['C8'] = "C8"
                     CASTLE_DICT_LONG[color] = "Long"
 
     def upper_right(self,position,starting_column, starting_row):
         color, type, image, position = Pieces.get_piece(self)
-        print(color,'knight color moving')
         two_one_row = starting_row + 2
         two_one_column = DICT_COLUMNS_REVERSED.get(starting_column + 1,"z")
         two_one_string = two_one_column + str(two_one_row)
-        print(two_one_string)
         self.check = self.BOARD_CORDINATES.get(two_one_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
@@ -318,32 +298,25 @@ class Pieces:
         one_two_row = starting_row + 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column +2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'ur')
         self.check = self.BOARD_CORDINATES.get(one_two_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
     
     def upper_left(self,position,starting_column, starting_row):
         color, type, image, position = Pieces.get_piece(self)
-        print(color,'knight color moving')
         two_one_row = starting_row + 2
         two_one_column = DICT_COLUMNS_REVERSED.get(starting_column - 1,"z")
         two_one_string = two_one_column + str(two_one_row)
-        print(two_one_string)
         self.check = self.BOARD_CORDINATES.get(two_one_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
         elif self.check != None:
-            color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
+            color1, type1, image1, position1 = Pieces.get_piece(self.check)  
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
@@ -351,31 +324,25 @@ class Pieces:
         one_two_row = starting_row + 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column-2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'ul')
+        
         self.check = self.BOARD_CORDINATES.get(one_two_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
     def lower_right(self,position,starting_column, starting_row):
         color, type, image, position = Pieces.get_piece(self)
-        print(color,'knight color moving')
         two_one_row = starting_row - 2
         two_one_column = DICT_COLUMNS_REVERSED.get(starting_column + 1,"z")
         two_one_string = two_one_column + str(two_one_row)
-        print(two_one_string)
         self.check = self.BOARD_CORDINATES.get(two_one_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
@@ -383,31 +350,25 @@ class Pieces:
         one_two_row = starting_row - 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column +2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'lr')
+
         self.check = self.BOARD_CORDINATES.get(one_two_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
     def lower_left(self,position,starting_column, starting_row):
         color, type, image, position = Pieces.get_piece(self)
-        print(color,'knight color moving')
         two_one_row = starting_row - 2
         two_one_column = DICT_COLUMNS_REVERSED.get(starting_column - 1,"z")
         two_one_string = two_one_column + str(two_one_row)
-        print(two_one_string)
         self.check = self.BOARD_CORDINATES.get(two_one_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[two_one_string] = two_one_string
@@ -415,14 +376,11 @@ class Pieces:
         one_two_row = starting_row - 1
         one_two_column = DICT_COLUMNS_REVERSED.get(starting_column-2, "z")
         one_two_string = one_two_column + str(one_two_row)
-        print(one_two_string,'ll')
         self.check = self.BOARD_CORDINATES.get(one_two_string)
-        print(self.check)
         if self.check == False:
             DICT_POSSIBLE_MOVES[one_two_string] = one_two_string
         elif self.check != None:
             color1, type1, image1, position1 = Pieces.get_piece(self.check)
-            print(color1,'check!= loop')    
                 
             if color != color1:
                 DICT_POSSIBLE_MOVES[one_two_string] = one_two_string    
@@ -432,24 +390,19 @@ class Pieces:
         lower_column = starting_column
         upper_column = starting_column
         color, piece_type, image, position = Pieces.get_piece(self)
-        print(color,piece_type)
-        print("lower column:",lower_column, "Row: ", row_descending)
         while lower_column > 1 and row_descending <=8 and row_descending >1 and max_range > 0:
             if piece_type == "pawn" and color == "white":
                 break
-            print('entered lower_column loop')
             lower_column -= 1
             row_descending -=1 
             if piece_type == "king":
                 max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
-            print(string, 'position')
             self.check = self.BOARD_CORDINATES.get(string)
             
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop')
                 if color == color1:
                     break
                 else:
@@ -459,25 +412,20 @@ class Pieces:
                 if piece_type == "pawn":
                     break
                 DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
-        print('got to second while loop')
         max_range += 1
         while upper_column > 1 and row_ascending <8 and row_ascending>=1 and max_range > 0:
             if piece_type == "pawn" and color == "black":
                 break
-            print('entered upper column loop')
             upper_column -= 1
             row_ascending += 1 
             if piece_type == "king":
                 max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
-            print(string)
             self.check = self.BOARD_CORDINATES.get(string)
             
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop')
-                print(column1,row)
                 if color == color1:
                     break
                 else:
@@ -494,12 +442,9 @@ class Pieces:
         lower_column = starting_column
         upper_column = starting_column
         color, piece_type, image, position = Pieces.get_piece(self)
-        print(color,piece_type)
-        print("lower column:",lower_column, "Row: ", row_descending)
         while lower_column < 8 and row_descending <=8 and row_descending >1 and max_range > 0:
             if piece_type == "pawn" and color == "white":
                 break
-            print('entered lower_column loop')
             lower_column += 1
             row_descending -=1 
             if piece_type == "king":
@@ -507,12 +452,10 @@ class Pieces:
            
             column1 = DICT_COLUMNS_REVERSED[lower_column]
             string = column1 + str(row_descending)
-            print(string, 'position')
             self.check = self.BOARD_CORDINATES.get(string)
             
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop',type1)
                 if color == color1:
                     break
                 else:
@@ -523,24 +466,19 @@ class Pieces:
                     break
                 DICT_POSSIBLE_MOVES[column1+str(row_descending)] = column1+str(row_descending)
         max_range += 1
-        print('got to second while loop')
         while upper_column < 8 and row_ascending <8 and row_descending >=1 and max_range > 0:
             if piece_type == "pawn" and color == "black":
                 break
-            print('entered upper column loop')
             upper_column += 1
             row_ascending += 1 
             if piece_type == "king":
                 max_range -= 1
             column1 = DICT_COLUMNS_REVERSED[upper_column]
             string = column1 + str(row_ascending)
-            print(string)
             self.check = self.BOARD_CORDINATES.get(string)
             
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop')
-                print(column1,row)
                 if color == color1:
                     break
                 else:
@@ -555,28 +493,19 @@ class Pieces:
     def above(self,starting_row, column, max_range,position):
         king_range = max_range
         color, piece_type, image,position = Pieces.get_piece(self)
-        print(color,piece_type)
-        print(king_range)
         if piece_type == "king":
             max_range = 8
         #test, test1, test2, test3, test4
         while max_range > starting_row and king_range > 0:
             starting_row +=1
             string = str(column) + str(starting_row)
-            print(string,"string")
             king_range -= 1
             self.check = self.BOARD_CORDINATES.get(string)
-            print(self.check)
-        
-            
-            
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1,'check!= loop')
                 if color == color1: 
                     break
                 else:
-                  print("we got to adding black piece")
                   DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
                   break  
             elif self.check == False:
@@ -584,23 +513,19 @@ class Pieces:
     def below(self,starting_row,column, position,max_range):
         king_range = max_range
         color, type_piece, image, position = Pieces.get_piece(self)
-        print(color)
         while starting_row > 1 and king_range > 0:
             starting_row -= 1
             king_range -= 1
             string = column + str(starting_row)
-            print(string,"string")
            
             self.check = self.BOARD_CORDINATES.get(string)
            
             #color1, type1, image1, position1 = Pieces.get_piece(self.check)
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1)
                 if color == color1: 
                     break
                 else:
-                    print('we got to adding black piece')
                     DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
                     break  
             
@@ -609,21 +534,17 @@ class Pieces:
     def left(self,starting_row, starting_column, max_range, position):
         king_range = max_range
         color, type, image, position = Pieces.get_piece(self)
-        print(color)
         while starting_column > 1 and king_range > 0:
             starting_column -=1
             king_range -=1
             column = DICT_COLUMNS_REVERSED[starting_column]
             string = column + str(starting_row)
-            print(string,"string")
             self.check = self.BOARD_CORDINATES.get(string)
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1)
                 if color == color1: 
                     break
                 else:
-                    print('we got to adding black piece')
                     DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
                     break  
             
@@ -636,22 +557,18 @@ class Pieces:
     def right(self,starting_row, starting_column, max_range, position):
         king_range = max_range
         color, type, image, position = Pieces.get_piece(self)
-        print(color)
         while starting_column <8 and king_range >0:
             starting_column += 1
             king_range -= 1
             column = DICT_COLUMNS_REVERSED[starting_column]
             column = DICT_COLUMNS_REVERSED[starting_column]
             string = column + str(starting_row)
-            print(string,"string")
             self.check = self.BOARD_CORDINATES.get(string)
             if self.check != False:
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
-                print(color1)
                 if color == color1: 
                     break
                 else:
-                    print('we got to adding black piece')
                     DICT_POSSIBLE_MOVES[column+str(starting_row)] = column+str(starting_row)
                     break  
             

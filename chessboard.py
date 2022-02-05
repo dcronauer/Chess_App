@@ -1,5 +1,6 @@
 
 from multiprocessing.dummy import Event
+from xml.sax.handler import property_lexical_handler
 from chess import *
 from PIL import ImageTk, Image
 import tkinter
@@ -16,13 +17,13 @@ def main():
     tkinter.mainloop()
 
 
-
 class Chess_GUI:
     images = {}
     ids = {}
     player_turn = {}
     array_rows = [1,2,3,4,5,6,7,8]
     position_initial = []
+    en_passant_dict = {}
     
     def __init__(self,player1, player2,turn):
         self.player1 = player1
@@ -34,7 +35,6 @@ class Chess_GUI:
         self.main_window.minsize(800,800)
         self.create_canvas()
         self.set_player_turn(self.player1, self.player2, turn)
-
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.board.tag_bind("blackpiece","<ButtonPress-1>", self.select_piece)
         self.board.tag_bind("blackpiece", "<ButtonRelease-1>", self.drag_stop)
@@ -50,10 +50,14 @@ class Chess_GUI:
             self.player_turn[0] = "blackpiece"
         print(self.player_turn) 
         
-
-
     def select_piece(self,event):
-        print(DICT_POSSIBLE_MOVES)
+        if self.en_passant_dict:
+            enpassant_piece = self.en_passant_dict.keys()
+            print(enpassant_piece)
+            enpassant = True
+        else:
+            enpassant = False
+            enpassant_piece = ""
         self._drag_data["item"] = self.board.find_closest(event.x,event.y)[0]
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
@@ -75,7 +79,7 @@ class Chess_GUI:
         color, type1, image, position = Pieces.get_piece(self.piece)
         print("grabbed",self._drag_data.get("item"),type1)
         if type1 == "pawn":
-            self.piece.pawn_moves()
+            self.piece.pawn_moves(enpassant,enpassant_piece)
         elif type1 == "rook":
             self.piece.rook_moves()
         elif type1 == "bishop":
@@ -94,27 +98,20 @@ class Chess_GUI:
         
         self.piece = self.ids[self._drag_data.get("item")]
         self.id_image = self._drag_data.get("item")
-        #print(self.position_initial,'initial cord result')
         
-        
-        print(self.ids)
         color, type, image, position = Pieces.get_piece(self.piece)
         print(position)
         initial_position = POSITION_CENTER[position]
         print(initial_position)
         moves = DICT_POSSIBLE_MOVES
-       
         row = self._drag_data.get('y')
         column = self._drag_data.get('x')
         cords_dropped = self.board.coords(self.id_image)
         if row > 800 or row <0 or column > 800 or column < 0:
-            self.board.coords(self.id_image,initial_position)
-            self.piece.set_move_position(position)
+            self.invalid_move(initial_position, position,self.piece,self.id_image)
+            
             self.drop_reset()
             return
-            
-
-
         print(cords_dropped,"dropped cords")
         #print(row,column)
         row_int =int(row/100)
@@ -198,10 +195,7 @@ class Chess_GUI:
                     self.rook.set_move_position("F8")
                     self.board.coords(rook_id[0],350,50)
                     self.rook.set_move()    
-                
 
-            
-            
             if self.check != False:
                 
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
@@ -212,25 +206,23 @@ class Chess_GUI:
                 self.images.pop(piece)
                 self.board.delete(self.id_image2)
                 Pieces.kill_piece(piece)
-
-
-            '''self.piece.set_move_position(position_id)
-            self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
-            self.piece.set_move()'''
+            if self.en_passant_dict:
+                
+                self.en_passant_dict.clear()
+            if type == "pawn" and (row_id == 4 or row_id == 5):
+                self.en_passant_check(self.piece,position_id)
             self.piece_position_move(position_id,snap_position_list,self.piece)
             
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
             else:
                 self.player_turn[0] = "whitepiece"
-            print(self.player_turn[0])
+            self.en_passant_dict.clear()
+        
             
         else:
-            #self.board.move(self.image,row, column)
-            self.board.coords(self.id_image,initial_position)
-            self.piece.set_move_position(position)
+            self.invalid_move(initial_position, position,self.piece,self.id_image)
             
-           
         print(self.board.coords(self.id_image),'cord result final')
         row_pawn = Pieces.get_row(self.piece)
         if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
@@ -243,7 +235,15 @@ class Chess_GUI:
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])
             piece.set_move()
 
-
+    def invalid_move(self,initial_position, position, piece, id_image):
+        self.board.coords(id_image,initial_position)
+        piece.set_move_position(position)
+    def en_passant_check(self,piece,position_id):
+        moved =Pieces.get_moved(piece)
+        print(moved,"this is the moved check")
+        if not moved:
+            self.en_passant_dict[position_id] = piece
+        print (self.en_passant_dict,"this is the enpassant check")
 
     def drop_reset(self):
         DICT_POSSIBLE_MOVES.clear()
@@ -281,10 +281,8 @@ class Chess_GUI:
         self.images.pop(piece)
         self.board.delete(self.id_image)
         Pieces.kill_piece(piece)
-        print(Pieces.BOARD_CORDINATES)
         desired_type = "queen"
         string = color1 + desired_type
-        print(string)
         list = PIECE_DICTIONARY.get(string)
         self.create_piece_promote(list,position1)
 
@@ -404,21 +402,8 @@ class Chess_GUI:
         self.ids[self.id] = piece
         piece.set_board_image(self.piece_image)
         self.images[piece] = self.piece_image
-        
-                
-                
-
-                
-        
         print(DICT_COUNT_PIECES)
-        
-        
-
-       
-        
-
-
-
+    
     def create_pieces(self):  
         total = 0
         for item in PIECE_DICTIONARY:
@@ -459,12 +444,7 @@ class Chess_GUI:
                 piece.set_id(self.id)
                 self.ids[self.id] = piece
                 piece.set_board_image(self.piece_image)
-                self.images[piece] = self.piece_image
-               
-                
-                
-
-                
+                self.images[piece] = self.piece_image         
                 total += 1
         print(DICT_COUNT_PIECES)
     
