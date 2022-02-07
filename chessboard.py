@@ -25,7 +25,7 @@ class Chess_GUI:
     position_initial = []
     en_passant_dict = {}
     
-    def __init__(self,player1, player2,turn):
+    def __init__(self,player1, player2,turn,turn_num = 0):
         self.player1 = player1
         self.player2 = player2
         self.turn = turn
@@ -42,7 +42,11 @@ class Chess_GUI:
         self.board.tag_bind("whitepiece","<ButtonPress-1>", self.select_piece)
         self.board.tag_bind("whitepiece", "<ButtonRelease-1>", self.drag_stop)
         self.board.tag_bind("whitepiece", "<B1-Motion>",  self.drag)
+        self.turn_num = turn_num
 
+    def turn_get(self):
+        return self.turn_num
+    
     def set_player_turn(self, player1, player2,turn):
         if player1 == "white":
             self.player_turn[0] = "whitepiece"
@@ -51,13 +55,14 @@ class Chess_GUI:
         print(self.player_turn) 
         
     def select_piece(self,event):
+        turn_num = self.turn_num
         if self.en_passant_dict:
-            enpassant_piece = self.en_passant_dict.keys()
-            print(enpassant_piece)
+            
+            
             enpassant = True
         else:
             enpassant = False
-            enpassant_piece = ""
+            
         self._drag_data["item"] = self.board.find_closest(event.x,event.y)[0]
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
@@ -79,7 +84,7 @@ class Chess_GUI:
         color, type1, image, position = Pieces.get_piece(self.piece)
         print("grabbed",self._drag_data.get("item"),type1)
         if type1 == "pawn":
-            self.piece.pawn_moves(enpassant,enpassant_piece)
+            self.piece.pawn_moves(enpassant,turn_num,self.en_passant_dict)
         elif type1 == "rook":
             self.piece.rook_moves()
         elif type1 == "bishop":
@@ -92,7 +97,7 @@ class Chess_GUI:
             self.piece.knight_moves()
         print(DICT_POSSIBLE_MOVES)
     def drag_stop(self, event):
-        
+        turn_num = self.turn_num
         column_dict = { 0: 'A', 1: 'B', 2: 'C',3: 'D', 4: 'E', 5: 'F', 6: 'G', 7: 'H'}
         row_dict = {0: 8, 1: 7, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1}
         
@@ -206,22 +211,23 @@ class Chess_GUI:
                 self.images.pop(piece)
                 self.board.delete(self.id_image2)
                 Pieces.kill_piece(piece)
-            if self.en_passant_dict:
-                
-                self.en_passant_dict.clear()
-            if type == "pawn" and (row_id == 4 or row_id == 5):
-                self.en_passant_check(self.piece,position_id)
-            self.piece_position_move(position_id,snap_position_list,self.piece)
             
+            if type == "pawn" and (row_id == 4 or row_id == 5):
+                self.en_passant_check(self.piece,position_id,turn_num)
+            self.piece_position_move(position_id,snap_position_list,self.piece)
+           
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
+                self.turn_num += 1
             else:
                 self.player_turn[0] = "whitepiece"
-            self.en_passant_dict.clear()
+                self.turn_num +=1
+          
         
             
         else:
             self.invalid_move(initial_position, position,self.piece,self.id_image)
+          
             
         print(self.board.coords(self.id_image),'cord result final')
         row_pawn = Pieces.get_row(self.piece)
@@ -238,11 +244,12 @@ class Chess_GUI:
     def invalid_move(self,initial_position, position, piece, id_image):
         self.board.coords(id_image,initial_position)
         piece.set_move_position(position)
-    def en_passant_check(self,piece,position_id):
+    def en_passant_check(self,piece,position_id,turn_num):
         moved =Pieces.get_moved(piece)
         print(moved,"this is the moved check")
+        turn_num += 1
         if not moved:
-            self.en_passant_dict[position_id] = piece
+            self.en_passant_dict[turn_num] = position_id
         print (self.en_passant_dict,"this is the enpassant check")
 
     def drop_reset(self):

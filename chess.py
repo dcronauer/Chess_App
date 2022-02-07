@@ -130,8 +130,9 @@ class Pieces:
         self.right(starting_row, starting_column, max_range, position)   
         
         
-    def pawn_moves(self,enpassant,enpassant_list):
-        print(enpassant_list, "these are the pawns you can enpassant")
+    def pawn_moves(self,enpassant,turn_num,en_passant_dict):
+        print (en_passant_dict)
+        print(turn_num)
         if self.moved == False:
             max_range = 2
         else:
@@ -141,7 +142,32 @@ class Pieces:
         column = position[0]
         starting_column = DICT_COLUMNS[column]
         if self.starting_row == 2:
-            
+            #check left side for enpassant
+            if starting_column - 1 >= 1:
+                left_column = starting_column -1
+                column_string = DICT_COLUMNS_REVERSED.get(left_column)
+                position_left = column_string + str(row)
+                print(position_left, "this is the position next to the pawn")
+                self.check = self.BOARD_CORDINATES.get(position_left)
+                print(self.check)
+                enpassant_position = en_passant_dict.get(turn_num,"none")
+                print(enpassant_position)
+                if self.check != False and enpassant_position == position_left:
+                        string_en_passant = column_string + str(row +1)
+                        DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
+            #check right side for enpassant
+            if starting_column + 1 <= 8 and enpassant:
+                right_column = starting_column + 1
+                column_string = DICT_COLUMNS_REVERSED.get(right_column)
+                position_right = column_string + str(row)
+                print(position_right, "this is the position next to the pawn")
+                self.check = self.BOARD_CORDINATES.get(position_right)
+                print(self.check)
+                enpassant_position = en_passant_dict.get(turn_num,"none")
+                if self.check != False and enpassant_position == position_right:
+                        string_en_passant = column_string + str(row +1)
+                        DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
+
             for i in range(max_range):
                 
                 if i == 0:
@@ -159,7 +185,30 @@ class Pieces:
                   DICT_POSSIBLE_MOVES[string] = string 
 
         if self.starting_row == 7:
-
+              #check left side for enpassant
+            if starting_column - 1 >= 1 and enpassant:
+                left_column = starting_column -1
+                column_string = DICT_COLUMNS_REVERSED.get(left_column)
+                position_left = column_string + str(row)
+                print(position_left, "this is the position next to the pawn")
+                self.check = self.BOARD_CORDINATES.get(position_left)
+                print(self.check)
+                enpassant_position = en_passant_dict.get(turn_num,"none")
+                if self.check != False and enpassant_position: 
+                        string_en_passant = column_string + str(row  - 1)
+                        DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
+            #check right side for enpassant
+            if starting_column + 1 <= 8 and enpassant:
+                right_column = starting_column + 1
+                column_string = DICT_COLUMNS_REVERSED.get(right_column)
+                position_right = column_string + str(row)
+                print(position_right, "this is the position next to the pawn")
+                self.check = self.BOARD_CORDINATES.get(position_right)
+                print(self.check)
+                enpassant_position = en_passant_dict.get(turn_num,"none")
+                if self.check != False and enpassant_position:
+                        string_en_passant = column_string + str(row - 1)
+                        DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
             for i in range(max_range):
                 if i == 0:
                     max_range = 1
@@ -593,7 +642,7 @@ class Pieces:
 #             DICT_PIECES[item+str(i+1)] = piece
 #             DICT_PIECE_REVERSE[piece] = item + str(i+1)
 #             img = chessboard.tk.PhotoImage(file=list[2])
-#             chessboard.Chess_GUI.board.create_image(100,100, image=img)
+#             board.create_image(100,100, image=img)
             
 # def create_board_cordinates():
 #     letters =['A','B','C','D','E','F','G','H']    
