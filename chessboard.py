@@ -1,6 +1,5 @@
 
-from multiprocessing.dummy import Event
-from xml.sax.handler import property_lexical_handler
+
 from chess import *
 from PIL import ImageTk, Image
 import tkinter
@@ -200,7 +199,26 @@ class Chess_GUI:
                     self.rook.set_move_position("F8")
                     self.board.coords(rook_id[0],350,50)
                     self.rook.set_move()    
+            if type == "pawn" and (row_id == 6 or row_id == 3) and position_id[0] != position[0]:
+                if color == "white":
+                    increment = -1
+                else:
+                    increment = 1
+                string = position_id[0] + str((int(position_id[1]) + increment))
+                print(string)
+                self.enpassant_position = dict_board.get(string)
+                if self.enpassant_position != False:
+                    color1, type1, image1, position1 = Pieces.get_piece(self.enpassant_position)
+                    #piece to die currently in spot that opposing piece could take
+                    self.id_image2, piece = self.enpassant_position.get_id()
+                    print(self.id_image2)
+                    self.ids.pop(self.id_image2)
+                    self.images.pop(piece)
+                    self.board.delete(self.id_image2)
+                    Pieces.kill_piece(piece)
 
+
+                
             if self.check != False:
                 
                 color1, type1, image1, position1 = Pieces.get_piece(self.check)
