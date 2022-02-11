@@ -26,7 +26,8 @@ CASTLE_DICT = {"white": False, "black": False}
 CASTLE_DICT_LONG = {"white": False, "black": False}
 POSITION_START_2 = {'whiterook1': 'A1', 'whitepawn1': 'A2', 'blackpawn1': 'A7', 'blackrook1': 'A8', 'wn1': 'B1', 'whitepawn2': 'B2', 'blackpawn2': 'B7', 'blackknight1': 'B8', 'whitebishop1': 'C1', 'whitepawn3': 'C2', 'blackpawn3': 'C7', 'blackbishop1': 'C8', 'whitequeen1': 'D1', 'whitepawn4': 'D2', 'blackpawn4': 'D7', 'blackqueen1': 'D8', 
 'whiteking1': 'E1', 'whitepawn5': 'E2', 'blackpawn5': 'E7', 'blackking1': 'E8', 'whitebishop2': 'F1', 'whitepawhiteknight6': 'F2', 'blackpawn6': 'F7', 'blackbishop2': 'F8', 'whiteknigth2': 'G1', 'whitepawn7': 'G2', 'blackpawn7': 'G7', 'blackknight2': 'G8', 'whiterook2': 'H1', 'whitepawn8': 'H2', 'blackpawn8': 'H7', 'blackrook2': 'H8'}
-
+black_piece_dict = {}
+white_piece_dict = {}
 class Pieces:
     BOARD_CORDINATES = {'A1': False, 'A2': False, 'A3': False , 'A4': False, 'A5': False, 'A6': False, 'A7': False, 'A8': False, 'B1': False, 'B2': False , 'B3': False, 'B4': False, 'B5': False, 'B6': False, 'B7': False, 'B8': False, 'C1': False, 'C2': False, 
  'C3': False, 'C4': False, 'C5': False, 'C6': False, 'C7': False, 'C8': False, 'D1': False, 'D2': False, 'D3': False, 'D4': False, 'D5': False, 'D6': False, 'D7': False, 'D8': False, 'E1': False, 'E2': False, 'E3': False, 'E4': False, 'E5': False, 'E6': False, 
@@ -34,7 +35,7 @@ class Pieces:
  'H3': False, 'H4': False, 'H5': False, 'H6': False, 'H7': False, 'H8': False}
     
     def __init__(self, color, type, image, piece_number = None, position = None, destroyed = False, kill = False, moved = False,cordinates=None, 
-    id=None, starting_row = None,board_image = None):
+    id=None, starting_row = None,board_image = None,name = None):
         self.color = color
         self.type = type
         self.image = image
@@ -47,6 +48,7 @@ class Pieces:
         self.starting_row = None
         self.board_image = board_image
         self.piece_number = piece_number
+        self.name = name
         
     #accessor
     def get_piece(self):
@@ -194,7 +196,7 @@ class Pieces:
                 self.check = self.BOARD_CORDINATES.get(position_left)
                 print(self.check)
                 enpassant_position = en_passant_dict.get(turn_num,"none")
-                if self.check != False and enpassant_position: 
+                if self.check != False and enpassant_position == position_left: 
                         string_en_passant = column_string + str(row  - 1)
                         DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
             #check right side for enpassant
@@ -206,7 +208,7 @@ class Pieces:
                 self.check = self.BOARD_CORDINATES.get(position_right)
                 print(self.check)
                 enpassant_position = en_passant_dict.get(turn_num,"none")
-                if self.check != False and enpassant_position:
+                if self.check != False and enpassant_position == position_right:
                         string_en_passant = column_string + str(row - 1)
                         DICT_POSSIBLE_MOVES[ string_en_passant] =  string_en_passant
             for i in range(max_range):
@@ -631,6 +633,13 @@ class Pieces:
         self.BOARD_CORDINATES[self.position] = False
         self.position = False
         self.destroyed = True
+
+        piece = self.name
+        print(self.name,"name check")
+        white = white_piece_dict.pop(piece,"none")
+        black = black_piece_dict.pop(piece,"none")
+        print(black,white)
+        
 # def create_pieces():
 #     total = 0
 #     for item in PIECE_DICTIONARY:

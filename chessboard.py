@@ -24,6 +24,7 @@ class Chess_GUI:
     position_initial = []
     en_passant_dict = {}
     
+    
     def __init__(self,player1, player2,turn,turn_num = 0):
         self.player1 = player1
         self.player2 = player2
@@ -46,6 +47,11 @@ class Chess_GUI:
     def turn_get(self):
         return self.turn_num
     
+    def blackpiece_get(self):
+        return self.black_piece_dict
+    def whitepiece_get(self):
+        return self.white_piece_dict
+
     def set_player_turn(self, player1, player2,turn):
         if player1 == "white":
             self.player_turn[0] = "whitepiece"
@@ -229,6 +235,7 @@ class Chess_GUI:
                 self.images.pop(piece)
                 self.board.delete(self.id_image2)
                 Pieces.kill_piece(piece)
+                print(white_piece_dict,black_piece_dict)
             
             if type == "pawn" and (row_id == 4 or row_id == 5):
                 self.en_passant_check(self.piece,position_id,turn_num)
@@ -406,6 +413,11 @@ class Chess_GUI:
         DICT_COUNT_PIECES.update(key_value_pair)
         count_piece = DICT_COUNT_PIECES.get(key_value_string)
         Pieces.set_piece_number(piece, count_piece)
+        piece.name = key_value_string + str(count + 1)
+        if color1 == "black":
+            black_piece_dict[piece.name] = piece
+        elif color1 == "white":
+            white_piece_dict[piece.name] = piece
         
         Pieces.set_promote_position(piece,position_promote)
         
@@ -427,7 +439,7 @@ class Chess_GUI:
         self.ids[self.id] = piece
         piece.set_board_image(self.piece_image)
         self.images[piece] = self.piece_image
-        print(DICT_COUNT_PIECES)
+        print(DICT_COUNT_PIECES,self.black_piece_dict,self.white_piece_dict)
     
     def create_pieces(self):  
         total = 0
@@ -449,6 +461,11 @@ class Chess_GUI:
                 DICT_COUNT_PIECES.update(key_value_pair)
                 count_piece = DICT_COUNT_PIECES.get(key_value_string)
                 Pieces.set_piece_number(piece, count_piece)
+                piece.name = key_value_string + str(count + 1)
+                if color1 == "black":
+                    black_piece_dict[piece.name] = piece
+                elif color1 == "white":
+                    white_piece_dict[piece.name] = piece
                 
                 piece.set_position()
                 
@@ -471,7 +488,7 @@ class Chess_GUI:
                 piece.set_board_image(self.piece_image)
                 self.images[piece] = self.piece_image         
                 total += 1
-        print(DICT_COUNT_PIECES)
+        print(DICT_COUNT_PIECES,black_piece_dict,white_piece_dict)
     
 
             
