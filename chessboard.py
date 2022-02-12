@@ -44,6 +44,9 @@ class Chess_GUI:
         self.board.tag_bind("whitepiece", "<B1-Motion>",  self.drag)
         self.turn_num = turn_num
 
+    def player_turn_get(self):
+        return self.player_turn
+    
     def turn_get(self):
         return self.turn_num
     
@@ -59,6 +62,35 @@ class Chess_GUI:
             self.player_turn[0] = "blackpiece"
         print(self.player_turn) 
         
+    def possible_squares_attack(self):
+        enpassant = False
+        turn_num = self.turn_num
+        color = self.player_turn.get(0)
+        print(color, "possible squares check")
+        if color == "whitepiece":
+            dict_pieces = white_piece_dict
+        elif color == "blackpiece":
+            dict_pieces = black_piece_dict
+        for item in dict_pieces:
+            piece = dict_pieces.get(item)
+            color1, type1, image, position = Pieces.get_piece(piece)
+            if type1 == "pawn":
+                self.piece.pawn_moves(enpassant,turn_num, self.en_passant_dict)
+            elif type1 == "rook":
+                self.piece.rook_moves()
+            elif type1 == "bishop":
+                self.piece.bishop_moves()
+            elif type1 == "queen":
+                self.piece.queen_moves()
+            elif type1 == "king":
+                self.piece.king_moves()
+            elif type1 == "knight":
+                self.piece.knight_moves()
+    
+    
+    
+    
+    
     def select_piece(self,event):
         turn_num = self.turn_num
         if self.en_passant_dict:
@@ -240,7 +272,8 @@ class Chess_GUI:
             if type == "pawn" and (row_id == 4 or row_id == 5):
                 self.en_passant_check(self.piece,position_id,turn_num)
             self.piece_position_move(position_id,snap_position_list,self.piece)
-           
+            self.possible_squares_attack()
+            print(DICT_POSSIBLE_MOVES)           
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
                 self.turn_num += 1

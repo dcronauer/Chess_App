@@ -114,7 +114,8 @@ class Pieces:
     def set_board_image(self,board_image):
         self.board_image = board_image
     
-    
+    #this function will run through the possible moves of each piece. 
+   
 
     #promote pawn
    
