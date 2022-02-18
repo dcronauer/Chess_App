@@ -69,8 +69,10 @@ class Chess_GUI:
         print(color, "possible squares check")
         if color == "whitepiece":
             dict_pieces = black_piece_dict
+            king_dict = white_piece_dict
         elif color == "blackpiece":
             dict_pieces = white_piece_dict
+            king_dict = black_piece_dict
         print(dict_pieces)
         for item in dict_pieces:
             print(item)
@@ -98,6 +100,16 @@ class Chess_GUI:
                 Pieces.knight_moves(piece)
             print(position, "piece position")
             print(DICT_POSSIBLE_MOVES)
+        king_string = color[:5] + type1 + "1"
+        print(king_string)
+        king = king_dict.get(king_string)
+        print(king, "this is the king piece check")
+        king_position = Pieces.get_position(king)
+        print(king_position)
+        if king_position in DICT_POSSIBLE_MOVES:
+            return True
+        else:
+            return False
     
     
     
@@ -304,7 +316,10 @@ class Chess_GUI:
                 print("got inside promote if")
                 self.promote_pawn(self.piece)
         DICT_POSSIBLE_MOVES.clear()
-        self.possible_squares_attack()          
+        check_status = self.possible_squares_attack() 
+        if check_status == True:
+            tkinter.messagebox.showwarning(title=None, message = "Check!")
+
         self.drop_reset()
         print(DICT_POSSIBLE_MOVES)
     def piece_position_move(self,position_id,snap_position_list,piece):
