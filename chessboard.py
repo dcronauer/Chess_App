@@ -68,25 +68,36 @@ class Chess_GUI:
         color = self.player_turn.get(0)
         print(color, "possible squares check")
         if color == "whitepiece":
-            dict_pieces = white_piece_dict
-        elif color == "blackpiece":
             dict_pieces = black_piece_dict
+        elif color == "blackpiece":
+            dict_pieces = white_piece_dict
+        print(dict_pieces)
         for item in dict_pieces:
+            print(item)
             piece = dict_pieces.get(item)
+            print(piece)
             color1, type1, image, position = Pieces.get_piece(piece)
+            print(type1)
             if type1 == "pawn":
-                self.piece.pawn_moves(enpassant,turn_num, self.en_passant_dict)
+                print("pawn moves")
+                Pieces.pawn_moves(piece,enpassant,turn_num, self.en_passant_dict)
             elif type1 == "rook":
-                self.piece.rook_moves()
+                print("rook moves")
+                Pieces.rook_moves(piece)
             elif type1 == "bishop":
-                self.piece.bishop_moves()
+                print("bishop moves")
+                Pieces.bishop_moves(piece)
             elif type1 == "queen":
-                self.piece.queen_moves()
+                print("queen moves")
+                Pieces.queen_moves(piece)
             elif type1 == "king":
-                self.piece.king_moves()
+                print("king moves")
+                Pieces.king_moves(piece)
             elif type1 == "knight":
-                self.piece.knight_moves()
-    
+                print("knight moves")
+                Pieces.knight_moves(piece)
+            print(position, "piece position")
+            print(DICT_POSSIBLE_MOVES)
     
     
     
@@ -272,7 +283,7 @@ class Chess_GUI:
             if type == "pawn" and (row_id == 4 or row_id == 5):
                 self.en_passant_check(self.piece,position_id,turn_num)
             self.piece_position_move(position_id,snap_position_list,self.piece)
-            self.possible_squares_attack()
+            
             print(DICT_POSSIBLE_MOVES)           
             if self.player_turn.get(0) == "whitepiece":
                 self.player_turn[0] = "blackpiece"
@@ -280,20 +291,22 @@ class Chess_GUI:
             else:
                 self.player_turn[0] = "whitepiece"
                 self.turn_num +=1
-          
+       
         
             
         else:
             self.invalid_move(initial_position, position,self.piece,self.id_image)
           
-            
+           
         print(self.board.coords(self.id_image),'cord result final')
         row_pawn = Pieces.get_row(self.piece)
         if type == "pawn" and (row_pawn == "8" or row_pawn == "1"):
                 print("got inside promote if")
                 self.promote_pawn(self.piece)
-               
+        DICT_POSSIBLE_MOVES.clear()
+        self.possible_squares_attack()          
         self.drop_reset()
+        print(DICT_POSSIBLE_MOVES)
     def piece_position_move(self,position_id,snap_position_list,piece):
             piece.set_move_position(position_id)
             self.board.coords(self.id_image,snap_position_list[0],snap_position_list[1])

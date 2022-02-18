@@ -232,6 +232,7 @@ class Pieces:
     def bishop_moves(self):
         max_range = 8
         position = self.position
+        print(position)
         row = int(position[1])
         column = position[0]
         starting_column = DICT_COLUMNS[column]
